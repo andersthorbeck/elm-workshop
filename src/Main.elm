@@ -4,9 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
-main : Html String
-main =
-    viewCards cards
+type alias Card =
+    { id : String, state : CardState }
 
 
 type CardState
@@ -15,16 +14,23 @@ type CardState
     | Matched
 
 
-type alias Card =
-    { id : String, state : CardState }
-
-
 cards : List Card
 cards =
     [ { id = "1", state = Open }
     , { id = "2", state = Closed }
     , { id = "3", state = Matched }
     ]
+
+
+main : Html String
+main =
+    viewCards cards
+
+
+viewCards : List Card -> Html a
+viewCards cards =
+    div []
+        (List.map viewCard cards)
 
 
 viewCard : Card -> Html a
@@ -49,9 +55,3 @@ viewCard card =
                 [ src srcUrl, class className ]
                 []
             ]
-
-
-viewCards : List Card -> Html a
-viewCards cards =
-    div []
-        (List.map viewCard cards)
