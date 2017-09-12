@@ -6,7 +6,11 @@ import Html.Events exposing (..)
 
 
 type alias Model =
-    { cards : List Card }
+    { cards : Deck }
+
+
+type alias Deck =
+    List Card
 
 
 type alias Card =
@@ -28,7 +32,7 @@ init =
     { cards = cards }
 
 
-cards : List Card
+cards : Deck
 cards =
     [ { id = "1", state = Open }
     , { id = "2", state = Closed }
@@ -49,7 +53,7 @@ view model =
     viewCards model.cards
 
 
-viewCards : List Card -> Html Msg
+viewCards : Deck -> Html Msg
 viewCards cards =
     div []
         (List.map viewCard cards)
