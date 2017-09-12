@@ -7,17 +7,17 @@ import Model exposing (..)
 import DeckGenerator exposing (..)
 
 
-init : Model
-init =
-    Choosing (DeckGenerator.static)
-
-
 main =
     Html.beginnerProgram
         { model = init
         , view = view
         , update = update
         }
+
+
+init : Model
+init =
+    Choosing (DeckGenerator.static)
 
 
 view : Model -> Html Msg
@@ -108,6 +108,31 @@ closeIfUnmatched =
     callIf (\c -> c.state /= Matched) (setCard Closed)
 
 
+setCard : CardState -> Card -> Card
+setCard newState card =
+    { card | state = newState }
+
+
+callIf : (Card -> Bool) -> (Card -> Card) -> (Card -> Card)
+callIf condition function =
+    (\c ->
+        if (condition c) then
+            function c
+        else
+            c
+    )
+
+
+openGivenCardInDeck : Card -> Deck -> Deck
+openGivenCardInDeck card =
+    List.map (openGivenCard card)
+
+
+openGivenCard : Card -> (Card -> Card)
+openGivenCard card =
+    callIf (\c -> c == card) (setCard Open)
+
+
 doCardsMatch : Card -> Card -> Bool
 doCardsMatch c1 c2 =
     c1.id == c2.id && c1.group /= c2.group
@@ -131,28 +156,3 @@ isGameOver =
 areAllCardsMatched : Deck -> Bool
 areAllCardsMatched =
     List.all (\c -> c.state == Matched)
-
-
-openGivenCardInDeck : Card -> Deck -> Deck
-openGivenCardInDeck card =
-    List.map (openGivenCard card)
-
-
-openGivenCard : Card -> (Card -> Card)
-openGivenCard card =
-    callIf (\c -> c == card) (setCard Open)
-
-
-callIf : (Card -> Bool) -> (Card -> Card) -> (Card -> Card)
-callIf condition function =
-    (\c ->
-        if (condition c) then
-            function c
-        else
-            c
-    )
-
-
-setCard : CardState -> Card -> Card
-setCard newState card =
-    { card | state = newState }
