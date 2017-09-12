@@ -1,6 +1,6 @@
 module DeckGenerator exposing (random, static)
 
-import Model exposing (Deck, Card, CardGroup(..), CardState(..))
+import MemoryModel exposing (Deck, Card, CardGroup(..), CardState(..))
 import Random
 import Random.List
 

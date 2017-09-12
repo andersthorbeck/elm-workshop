@@ -1,14 +1,14 @@
-module Main exposing (..)
+module Memory exposing (memoryApp)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Model exposing (..)
+import MemoryModel exposing (..)
 import DeckGenerator exposing (..)
 import Random
 
 
-main =
+memoryApp =
     Html.program
         { init = init
         , view = view
