@@ -1,7 +1,10 @@
 module Main exposing (..)
 
-import Memory exposing (memoryApp)
+--import Memory exposing (memoryApp)
+
+import Snake exposing (snakeApp)
 
 
 main =
-    memoryApp
+    --    memoryApp
+    snakeApp
