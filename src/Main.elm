@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 
 main : Html String
 main =
-    viewCard thing
+    viewCard firstCard
 
 
 greet : String -> String
@@ -14,8 +14,8 @@ greet name =
     "Hello, " ++ name
 
 
-thing : { id : String }
-thing =
+firstCard : { id : String }
+firstCard =
     { id = "1" }
 
 
