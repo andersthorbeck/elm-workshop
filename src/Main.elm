@@ -3,33 +3,7 @@ module Main exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
-
-type alias Model =
-    { cards : Deck }
-
-
-type alias Deck =
-    List Card
-
-
-type alias Card =
-    { id : String, state : CardState, group : CardGroup }
-
-
-type CardState
-    = Open
-    | Closed
-    | Matched
-
-
-type CardGroup
-    = A
-    | B
-
-
-type Msg
-    = CardClick Card
+import Model exposing (..)
 
 
 init : Model
