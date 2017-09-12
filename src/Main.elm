@@ -91,11 +91,13 @@ areAllCardsMatched =
 updateOnCardClick : Card -> Model -> Model
 updateOnCardClick card model =
     { model
-        | cards =
-            List.map
-                (openGivenCard card)
-                model.cards
+        | cards = openGivenCardInDeck card model.cards
     }
+
+
+openGivenCardInDeck : Card -> Deck -> Deck
+openGivenCardInDeck card =
+    List.map (openGivenCard card)
 
 
 openGivenCard : Card -> (Card -> Card)
