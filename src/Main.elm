@@ -83,6 +83,11 @@ closeIfUnmatched =
     callIf (\c -> c.state /= Matched) (setCard Closed)
 
 
+areAllCardsMatched : Deck -> Bool
+areAllCardsMatched =
+    List.all (\c -> c.state == Matched)
+
+
 updateOnCardClick : Card -> Model -> Model
 updateOnCardClick card model =
     { model
