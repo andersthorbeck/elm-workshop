@@ -24,6 +24,14 @@ firstCard =
     { id = "1", state = Open }
 
 
+cards : List Card
+cards =
+    [ { id = "1", state = Open }
+    , { id = "2", state = Closed }
+    , { id = "3", state = Matched }
+    ]
+
+
 viewCard : Card -> Html a
 viewCard card =
     div []
