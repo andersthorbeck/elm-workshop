@@ -72,13 +72,18 @@ viewGameOver : Html Msg
 viewGameOver =
     div []
         [ p [] [ text "Game over, well done!" ]
-        , button [] [ text "Restart!" ]
+        , button [ onClick Restart ] [ text "Restart!" ]
         ]
 
 
 update : Msg -> Model -> Model
-update (CardClick card) model =
-    updateOnCardClick card model
+update msg model =
+    case msg of
+        CardClick card ->
+            updateOnCardClick card model
+
+        Restart ->
+            init
 
 
 updateOnCardClick : Card -> GameState -> GameState

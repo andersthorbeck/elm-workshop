@@ -32,3 +32,4 @@ type CardGroup
 
 type Msg
     = CardClick Card
+    | Restart
