@@ -18,6 +18,10 @@ type CardState
     | Matched
 
 
+type Msg
+    = CardClick Card
+
+
 init : Model
 init =
     { cards = cards }
