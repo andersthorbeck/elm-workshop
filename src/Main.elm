@@ -81,6 +81,21 @@ viewCard card =
             ]
 
 
+update : Msg -> Model -> Model
+update (CardClick card) model =
+    { model
+        | cards =
+            List.map
+                (\c ->
+                    if (card == c) then
+                        { c | state = Open }
+                    else
+                        c
+                )
+                model.cards
+    }
+
+
 setCard : CardState -> Card -> Card
 setCard state card =
     case state of
