@@ -11,3 +11,8 @@ main =
 greet : String -> String
 greet name =
     "Hello, " ++ name
+
+
+thing : { id : String }
+thing =
+    { id = "1" }
