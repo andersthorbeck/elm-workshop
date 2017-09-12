@@ -91,7 +91,10 @@ doCardsMatch c1 c2 =
 setCardsMatched : Card -> Card -> Deck -> Deck
 setCardsMatched c1 c2 deck =
     List.map
-        (callIf (\c -> c == c1 || c == c2) (setCard Matched))
+        (callIf
+            (\c -> List.any (doCardsMatch c) [ c1, c2 ])
+            (setCard Matched)
+        )
         deck
 
 
