@@ -8,16 +8,17 @@ import DeckGenerator exposing (..)
 
 
 main =
-    Html.beginnerProgram
-        { model = init
+    Html.program
+        { init = init
         , view = view
         , update = update
+        , subscriptions = \_ -> Sub.none
         }
 
 
-init : Model
+init : ( Model, Cmd Msg )
 init =
-    Choosing (DeckGenerator.static)
+    ( Choosing (DeckGenerator.static), Cmd.none )
 
 
 view : Model -> Html Msg
@@ -76,11 +77,11 @@ viewGameOver =
         ]
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         CardClick card ->
-            updateOnCardClick card model
+            ( updateOnCardClick card model, Cmd.none )
 
         Restart ->
             init
