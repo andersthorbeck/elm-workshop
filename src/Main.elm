@@ -8,5 +8,6 @@ main =
     text (greet "Anders")
 
 
+greet : String -> String
 greet name =
     "Hello, " ++ name
