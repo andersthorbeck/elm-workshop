@@ -12,14 +12,6 @@ init =
     Choosing (DeckGenerator.static)
 
 
-cards : Deck
-cards =
-    [ { id = "1", state = Open, group = A }
-    , { id = "2", state = Closed, group = A }
-    , { id = "3", state = Matched, group = A }
-    ]
-
-
 main =
     Html.beginnerProgram
         { model = init
