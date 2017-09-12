@@ -20,12 +20,16 @@ type CardState
     | Matched
 
 
-firstCard : { id : String, state : CardState }
+type alias Card =
+    { id : String, state : CardState }
+
+
+firstCard : Card
 firstCard =
     { id = "1", state = Open }
 
 
-viewCard : { id : String, state : CardState } -> Html a
+viewCard : Card -> Html a
 viewCard card =
     div []
         [ img [ src ("/static/cats/" ++ card.id ++ ".jpg") ]
