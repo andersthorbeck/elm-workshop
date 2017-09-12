@@ -83,6 +83,23 @@ closeIfUnmatched =
     callIf (\c -> c.state /= Matched) (setCard Closed)
 
 
+doCardsMatch : Card -> Card -> Bool
+doCardsMatch c1 c2 =
+    c1.id == c2.id && c1.group /= c2.group
+
+
+setCardsMatched : Card -> Card -> Deck -> Deck
+setCardsMatched c1 c2 deck =
+    List.map
+        (callIf (\c -> c == c1 || c == c2) (setCard Matched))
+        deck
+
+
+isGameOver : Deck -> Bool
+isGameOver =
+    areAllCardsMatched
+
+
 areAllCardsMatched : Deck -> Bool
 areAllCardsMatched =
     List.all (\c -> c.state == Matched)
