@@ -3,5 +3,6 @@ module Main exposing (..)
 import Html exposing (..)
 
 
+main : Html String
 main =
-    "Hello, world!"
+    text "Hello, world!"
