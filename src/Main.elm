@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 
 main : Html String
 main =
-    viewCard firstCard
+    viewCards cards
 
 
 type CardState
@@ -17,11 +17,6 @@ type CardState
 
 type alias Card =
     { id : String, state : CardState }
-
-
-firstCard : Card
-firstCard =
-    { id = "1", state = Open }
 
 
 cards : List Card
