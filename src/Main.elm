@@ -9,11 +9,6 @@ main =
     viewCard firstCard
 
 
-greet : String -> String
-greet name =
-    "Hello, " ++ name
-
-
 type CardState
     = Open
     | Closed
