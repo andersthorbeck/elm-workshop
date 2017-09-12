@@ -23,6 +23,11 @@ type CardState
     | Matched
 
 
+type CardGroup
+    = A
+    | B
+
+
 type Msg
     = CardClick Card
 
