@@ -2,7 +2,7 @@ module Model exposing (..)
 
 
 type alias Model =
-    { cards : Deck }
+    GameState
 
 
 type GameState

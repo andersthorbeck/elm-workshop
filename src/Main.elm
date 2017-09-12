@@ -9,7 +9,7 @@ import DeckGenerator exposing (..)
 
 init : Model
 init =
-    { cards = DeckGenerator.static }
+    Choosing (DeckGenerator.static)
 
 
 cards : Deck
@@ -30,7 +30,15 @@ main =
 
 view : Model -> Html Msg
 view model =
-    viewCards model.cards
+    case model of
+        Choosing deck ->
+            viewCards deck
+
+        Matching deck card ->
+            viewCards deck
+
+        GameOver ->
+            text "Game over, well done!"
 
 
 viewCards : Deck -> Html Msg
@@ -73,6 +81,31 @@ update (CardClick card) model =
     updateOnCardClick card model
 
 
+updateOnCardClick : Card -> GameState -> GameState
+updateOnCardClick card state =
+    case state of
+        Choosing deck ->
+            Matching
+                (openGivenCardInDeck card (closeAllUnmatched deck))
+                card
+
+        Matching deck prevSelectedCard ->
+            if (doCardsMatch prevSelectedCard card) then
+                let
+                    updatedDeck =
+                        setCardsMatched prevSelectedCard card deck
+                in
+                    if (isGameOver updatedDeck) then
+                        GameOver
+                    else
+                        Choosing updatedDeck
+            else
+                Choosing (openGivenCardInDeck card deck)
+
+        GameOver ->
+            state
+
+
 closeAllUnmatched : Deck -> Deck
 closeAllUnmatched =
     List.map closeIfUnmatched
@@ -106,13 +139,6 @@ isGameOver =
 areAllCardsMatched : Deck -> Bool
 areAllCardsMatched =
     List.all (\c -> c.state == Matched)
-
-
-updateOnCardClick : Card -> Model -> Model
-updateOnCardClick card model =
-    { model
-        | cards = openGivenCardInDeck card model.cards
-    }
 
 
 openGivenCardInDeck : Card -> Deck -> Deck
