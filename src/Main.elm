@@ -86,17 +86,32 @@ viewCard card =
 
 update : Msg -> Model -> Model
 update (CardClick card) model =
+    updateOnCardClick card model
+
+
+updateOnCardClick : Card -> Model -> Model
+updateOnCardClick card model =
     { model
         | cards =
             List.map
-                (\c ->
-                    if (card == c) then
-                        setCard Open c
-                    else
-                        c
-                )
+                (openGivenCard card)
                 model.cards
     }
+
+
+openGivenCard : Card -> (Card -> Card)
+openGivenCard card =
+    callIf (\c -> c == card) (setCard Open)
+
+
+callIf : (Card -> Bool) -> (Card -> Card) -> (Card -> Card)
+callIf condition function =
+    (\c ->
+        if (condition c) then
+            function c
+        else
+            c
+    )
 
 
 setCard : CardState -> Card -> Card
