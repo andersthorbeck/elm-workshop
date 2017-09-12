@@ -36,9 +36,12 @@ cards =
     ]
 
 
-main : Html Msg
 main =
-    view init
+    Html.beginnerProgram
+        { model = init
+        , view = view
+        , update = update
+        }
 
 
 view : Model -> Html Msg
