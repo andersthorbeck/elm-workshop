@@ -29,20 +29,26 @@ cards =
 
 viewCard : Card -> Html a
 viewCard card =
-    div []
-        [ img
-            (case card.state of
+    let
+        imgPath imgName =
+            "/static/cats/" ++ imgName
+
+        ( srcUrl, className ) =
+            case card.state of
                 Closed ->
-                    [ src ("/static/cats/closed.png"), class "closed" ]
+                    ( imgPath "closed.png", "closed" )
 
                 Open ->
-                    [ src ("/static/cats/" ++ card.id ++ ".jpg"), class "open" ]
+                    ( imgPath (card.id ++ ".jpg"), "open" )
 
                 Matched ->
-                    [ src ("/static/cats/" ++ card.id ++ ".jpg"), class "matched" ]
-            )
-            []
-        ]
+                    ( imgPath (card.id ++ ".jpg"), "matched" )
+    in
+        div []
+            [ img
+                [ src srcUrl, class className ]
+                []
+            ]
 
 
 viewCards : List Card -> Html a
