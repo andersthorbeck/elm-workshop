@@ -45,7 +45,7 @@ viewCard card =
         imgPath imgName =
             "/static/cats/" ++ imgName
     in
-        div []
+        div [ style [ ( "display", "inline-block" ) ] ]
             [ img
                 (case card.state of
                     Closed ->
