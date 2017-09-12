@@ -79,3 +79,16 @@ viewCard card =
                 )
                 []
             ]
+
+
+setCard : CardState -> Card -> Card
+setCard state card =
+    case state of
+        Closed ->
+            { card | state = Open }
+
+        Open ->
+            card
+
+        Matched ->
+            card
