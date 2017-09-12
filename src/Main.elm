@@ -14,7 +14,7 @@ type alias Deck =
 
 
 type alias Card =
-    { id : String, state : CardState }
+    { id : String, state : CardState, group : CardGroup }
 
 
 type CardState
@@ -39,9 +39,9 @@ init =
 
 cards : Deck
 cards =
-    [ { id = "1", state = Open }
-    , { id = "2", state = Closed }
-    , { id = "3", state = Matched }
+    [ { id = "1", state = Open, group = A }
+    , { id = "2", state = Closed, group = A }
+    , { id = "3", state = Matched, group = A }
     ]
 
 
