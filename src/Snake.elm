@@ -1,7 +1,7 @@
 module Snake exposing (snakeApp)
 
 import Html exposing (..)
-import SnakeModel exposing (..)
+import Snake.Model exposing (..)
 
 
 snakeApp =
