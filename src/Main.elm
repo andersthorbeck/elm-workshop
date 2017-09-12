@@ -4,6 +4,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 
+type alias Model =
+    { cards : List Card }
+
+
 type alias Card =
     { id : String, state : CardState }
 
