@@ -33,3 +33,4 @@ type CardGroup
 type Msg
     = CardClick Card
     | Restart
+    | OnGenerated Deck

@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (..)
 import DeckGenerator exposing (..)
+import Random
 
 
 main =
@@ -84,7 +85,10 @@ update msg model =
             ( updateOnCardClick card model, Cmd.none )
 
         Restart ->
-            init
+            ( model, Random.generate OnGenerated (DeckGenerator.random) )
+
+        OnGenerated deck ->
+            ( Choosing deck, Cmd.none )
 
 
 updateOnCardClick : Card -> GameState -> GameState
