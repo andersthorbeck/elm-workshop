@@ -5,6 +5,12 @@ type alias Model =
     { cards : Deck }
 
 
+type GameState
+    = Choosing Deck
+    | Matching Deck Card
+    | GameOver
+
+
 type alias Deck =
     List Card
 
