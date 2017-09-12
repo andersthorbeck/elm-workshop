@@ -91,7 +91,7 @@ update (CardClick card) model =
             List.map
                 (\c ->
                     if (card == c) then
-                        { c | state = Open }
+                        setCard Open c
                     else
                         c
                 )
