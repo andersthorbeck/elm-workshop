@@ -4,11 +4,12 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model exposing (..)
+import DeckGenerator exposing (..)
 
 
 init : Model
 init =
-    { cards = cards }
+    { cards = DeckGenerator.static }
 
 
 cards : Deck
