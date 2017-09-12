@@ -56,20 +56,24 @@ viewCard card =
     let
         imgPath imgName =
             "/static/cats/" ++ imgName
-
-        ( srcUrl, className ) =
-            case card.state of
-                Closed ->
-                    ( imgPath "closed.png", "closed" )
-
-                Open ->
-                    ( imgPath (card.id ++ ".jpg"), "open" )
-
-                Matched ->
-                    ( imgPath (card.id ++ ".jpg"), "matched" )
     in
         div []
             [ img
-                [ src srcUrl, class className ]
+                (case card.state of
+                    Closed ->
+                        [ src (imgPath "closed.png")
+                        , class "closed"
+                        ]
+
+                    Open ->
+                        [ src (imgPath (card.id ++ ".jpg"))
+                        , class "open"
+                        ]
+
+                    Matched ->
+                        [ src (imgPath (card.id ++ ".jpg"))
+                        , class "matched"
+                        ]
+                )
                 []
             ]
