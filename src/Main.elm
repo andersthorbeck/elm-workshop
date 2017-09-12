@@ -14,12 +14,18 @@ greet name =
     "Hello, " ++ name
 
 
-firstCard : { id : String }
+type CardState
+    = Open
+    | Closed
+    | Matched
+
+
+firstCard : { id : String, state : CardState }
 firstCard =
-    { id = "1" }
+    { id = "1", state = Open }
 
 
-viewCard : { id : String } -> Html a
+viewCard : { id : String, state : CardState } -> Html a
 viewCard card =
     div []
         [ img [ src ("/static/cats/" ++ card.id ++ ".jpg") ]
