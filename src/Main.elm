@@ -30,7 +30,17 @@ cards =
 viewCard : Card -> Html a
 viewCard card =
     div []
-        [ img [ src ("/static/cats/" ++ card.id ++ ".jpg") ]
+        [ img
+            (case card.state of
+                Closed ->
+                    [ src ("/static/cats/closed.png"), class "closed" ]
+
+                Open ->
+                    [ src ("/static/cats/" ++ card.id ++ ".jpg"), class "open" ]
+
+                Matched ->
+                    [ src ("/static/cats/" ++ card.id ++ ".jpg"), class "matched" ]
+            )
             []
         ]
 
