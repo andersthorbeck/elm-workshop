@@ -30,7 +30,7 @@ view model =
             viewCards deck
 
         GameOver ->
-            text "Game over, well done!"
+            viewGameOver
 
 
 viewCards : Deck -> Html Msg
@@ -66,6 +66,11 @@ viewCard card =
                 )
                 []
             ]
+
+
+viewGameOver : Html Msg
+viewGameOver =
+    text "Game over, well done!"
 
 
 update : Msg -> Model -> Model
