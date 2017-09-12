@@ -100,13 +100,5 @@ update (CardClick card) model =
 
 
 setCard : CardState -> Card -> Card
-setCard state card =
-    case state of
-        Closed ->
-            { card | state = Open }
-
-        Open ->
-            card
-
-        Matched ->
-            card
+setCard newState card =
+    { card | state = newState }
