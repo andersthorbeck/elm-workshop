@@ -70,7 +70,10 @@ viewCard card =
 
 viewGameOver : Html Msg
 viewGameOver =
-    text "Game over, well done!"
+    div []
+        [ p [] [ text "Game over, well done!" ]
+        , button [] [ text "Restart!" ]
+        ]
 
 
 update : Msg -> Model -> Model
