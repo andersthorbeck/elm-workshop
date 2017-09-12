@@ -73,6 +73,16 @@ update (CardClick card) model =
     updateOnCardClick card model
 
 
+closeAllUnmatched : Deck -> Deck
+closeAllUnmatched =
+    List.map closeIfUnmatched
+
+
+closeIfUnmatched : Card -> Card
+closeIfUnmatched =
+    callIf (\c -> c.state /= Matched) (setCard Closed)
+
+
 updateOnCardClick : Card -> Model -> Model
 updateOnCardClick card model =
     { model
