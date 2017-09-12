@@ -18,6 +18,11 @@ type CardState
     | Matched
 
 
+init : Model
+init =
+    { cards = cards }
+
+
 cards : List Card
 cards =
     [ { id = "1", state = Open }
