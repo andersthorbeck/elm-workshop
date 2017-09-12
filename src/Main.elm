@@ -5,4 +5,8 @@ import Html exposing (..)
 
 main : Html String
 main =
-    text "Hello, world!"
+    text (greet "Anders")
+
+
+greet name =
+    "Hello, " ++ name
