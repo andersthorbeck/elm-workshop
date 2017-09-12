@@ -37,7 +37,12 @@ cards =
 
 main : Html String
 main =
-    viewCards cards
+    view init
+
+
+view : Model -> Html a
+view model =
+    viewCards model.cards
 
 
 viewCards : List Card -> Html a
