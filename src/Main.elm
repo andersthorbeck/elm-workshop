@@ -2,6 +2,7 @@ module Main exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
 
 type alias Model =
@@ -35,23 +36,23 @@ cards =
     ]
 
 
-main : Html String
+main : Html Msg
 main =
     view init
 
 
-view : Model -> Html a
+view : Model -> Html Msg
 view model =
     viewCards model.cards
 
 
-viewCards : List Card -> Html a
+viewCards : List Card -> Html Msg
 viewCards cards =
     div []
         (List.map viewCard cards)
 
 
-viewCard : Card -> Html a
+viewCard : Card -> Html Msg
 viewCard card =
     let
         imgPath imgName =
@@ -63,6 +64,7 @@ viewCard card =
                     Closed ->
                         [ src (imgPath "closed.png")
                         , class "closed"
+                        , onClick (CardClick card)
                         ]
 
                     Open ->
