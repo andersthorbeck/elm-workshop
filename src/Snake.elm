@@ -7,17 +7,36 @@ import Snake.Model exposing (..)
 
 snakeApp : Html a
 snakeApp =
-    view SnakeTile
+    view testGrid
 
 
-view : Tile -> Html a
-view tile =
+testGrid : Grid
+testGrid =
+    [ [ SnakeTile, FreeTile ], [ FreeTile, FoodTile ] ]
+
+
+view : Grid -> Html a
+view grid =
     div []
         [ h1 []
             [ text "Snake" ]
         , div []
-            [ viewTile tile ]
+            [ viewGrid grid ]
         ]
+
+
+viewGrid : Grid -> Html a
+viewGrid grid =
+    div
+        [ class "grid" ]
+        (List.map viewRow grid)
+
+
+viewRow : Row -> Html a
+viewRow row =
+    div
+        [ class "row" ]
+        (List.map viewTile row)
 
 
 viewTile : Tile -> Html a
@@ -35,11 +54,9 @@ viewTile tile =
                     "gray"
     in
         div
-            [ style
-                [ ( "width", "10px" )
-                , ( "height", "10px" )
-                , ( "margin", "auto" )
-                , ( "background-color", color )
+            [ class "tile"
+            , style
+                [ ( "background-color", color )
                 ]
             ]
             []
