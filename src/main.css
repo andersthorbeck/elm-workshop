@@ -77,9 +77,13 @@ ul {
 }
 
 .snake {
-  background: lightcoral;
+  background-color: yellow;
 }
 
 .food {
-  background-image: url('/static/snake/food.ico');
+  background-color: red
+}
+
+.unoccupied {
+  background-color: gray
 }

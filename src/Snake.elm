@@ -41,22 +41,19 @@ viewRow row =
 
 viewTile : Tile -> Html a
 viewTile tile =
-    let
-        color =
-            case tile of
-                SnakeTile ->
-                    "yellow"
+    div
+        [ class ("tile " ++ (tileClass tile)) ]
+        []
 
-                FoodTile ->
-                    "red"
 
-                FreeTile ->
-                    "gray"
-    in
-        div
-            [ class "tile"
-            , style
-                [ ( "background-color", color )
-                ]
-            ]
-            []
+tileClass : Tile -> String
+tileClass tile =
+    case tile of
+        SnakeTile ->
+            "snake"
+
+        FoodTile ->
+            "food"
+
+        FreeTile ->
+            "unoccupied"
