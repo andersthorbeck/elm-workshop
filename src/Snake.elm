@@ -32,7 +32,7 @@ view model =
 toGrid : Model -> Grid
 toGrid model =
     let
-        ( numRows, _ ) =
+        ( _, numRows ) =
             model.gridDims
 
         -- Rows are numbered from the bottom, but rendered from the top.
@@ -45,15 +45,18 @@ toGrid model =
 toRow : Model -> Int -> Row
 toRow model rowNum =
     let
-        ( _, numColumns ) =
+        -- Remember, the row is the _vertical_ component, i.e. the y, not the x.
+        y =
+            rowNum
+
+        ( numColumns, _ ) =
             model.gridDims
 
         columns =
             List.range 0 (numColumns - 1)
     in
         List.map
-            -- WTF: Have to reverse row and column here to get correct output??
-            (\c -> toTile model ( c, rowNum ))
+            (\x -> toTile model ( x, y ))
             columns
 
 
