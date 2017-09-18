@@ -5,9 +5,12 @@ import Html.Attributes exposing (..)
 import Snake.Model exposing (..)
 
 
-snakeApp : Html a
 snakeApp =
-    view testModel
+    Html.beginnerProgram
+        { model = testModel
+        , view = view
+        , update = update
+        }
 
 
 testModel : Model
@@ -102,3 +105,9 @@ tileClass tile =
 
         FreeTile ->
             "unoccupied"
+
+
+update : Msg -> Model -> Model
+update msg model =
+    -- WIP: no-op
+    model
