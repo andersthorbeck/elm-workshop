@@ -58,6 +58,7 @@ type alias Food =
 
 type Msg
     = ChangeDirection Direction
+    | Tick
 
 
 
