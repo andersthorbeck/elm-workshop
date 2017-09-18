@@ -128,5 +128,47 @@ changeDirection dir model =
 
 tick : Model -> Model
 tick model =
-    -- WIP: no-op
-    model
+    let
+        -- The default should never be used, as the snake should never be 0 length.
+        originalHead =
+            Maybe.withDefault ( 0, 0 ) (List.head model.snake)
+
+        newHead =
+            nextHead model.direction originalHead
+
+        newTail =
+            dropLast model.snake
+    in
+        -- TODO: Handle eating food
+        -- TODO: Handle collisions
+        { model | snake = newHead :: newTail }
+
+
+nextHead : Direction -> Coord -> Coord
+nextHead dir ( x, y ) =
+    case dir of
+        Up ->
+            ( x, y + 1 )
+
+        Down ->
+            ( x, y - 1 )
+
+        Left ->
+            ( x - 1, y )
+
+        Right ->
+            ( x + 1, y )
+
+
+dropLast : List a -> List a
+dropLast l =
+    case l of
+        [] ->
+            -- TODO: This should strictly lead to an error, but I don't know how.
+            []
+
+        [ x ] ->
+            []
+
+        x :: xs ->
+            x :: dropLast xs
