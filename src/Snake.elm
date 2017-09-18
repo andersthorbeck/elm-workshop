@@ -109,5 +109,21 @@ tileClass tile =
 
 update : Msg -> Model -> Model
 update msg model =
+    case msg of
+        ChangeDirection dir ->
+            changeDirection dir model
+
+        Tick ->
+            tick model
+
+
+changeDirection : Direction -> Model -> Model
+changeDirection dir model =
+    -- WIP: no-op
+    model
+
+
+tick : Model -> Model
+tick model =
     -- WIP: no-op
     model
