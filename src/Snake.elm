@@ -2,6 +2,7 @@ module Snake exposing (snakeApp)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Snake.Model exposing (..)
 
 
@@ -22,13 +23,15 @@ testModel =
     }
 
 
-view : Model -> Html a
+view : Model -> Html Msg
 view model =
     div []
         [ h1 []
             [ text "Snake" ]
         , div []
             [ viewGrid (toGrid model) ]
+        , div []
+            [ button [ onClick Tick ] [ text "tick" ] ]
         ]
 
 
