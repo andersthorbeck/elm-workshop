@@ -15,10 +15,10 @@ snakeApp =
 
 testModel : Model
 testModel =
-    { gridDims = ( 3, 3 )
-    , snake = [ ( 1, 1 ), ( 2, 1 ) ]
+    { gridDims = ( 6, 5 )
+    , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
     , direction = Left
-    , food = ( 0, 2 )
+    , food = ( 1, 3 )
     }
 
 
