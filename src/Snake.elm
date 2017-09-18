@@ -31,6 +31,13 @@ view model =
         , div []
             [ viewGrid (toGrid model) ]
         , div []
+            -- TODO: Next step: Listen to keydowns to generate these messages. Look up subscriptions.
+            [ button [ onClick (ChangeDirection Left) ] [ text "<" ]
+            , button [ onClick (ChangeDirection Up) ] [ text "^" ]
+            , button [ onClick (ChangeDirection Down) ] [ text "v" ]
+            , button [ onClick (ChangeDirection Right) ] [ text ">" ]
+            ]
+        , div []
             [ button [ onClick Tick ] [ text "tick" ] ]
         ]
 
@@ -122,8 +129,7 @@ update msg model =
 
 changeDirection : Direction -> Model -> Model
 changeDirection dir model =
-    -- WIP: no-op
-    model
+    { model | direction = dir }
 
 
 tick : Model -> Model
