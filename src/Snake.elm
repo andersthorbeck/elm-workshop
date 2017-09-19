@@ -129,7 +129,36 @@ update msg model =
 
 changeDirection : Direction -> Model -> Model
 changeDirection dir model =
-    { model | direction = dir }
+    if List.member dir (legalDirectionChanges model.direction) then
+        { model | direction = dir }
+    else
+        model
+
+
+legalDirectionChanges : Direction -> List Direction
+legalDirectionChanges dir =
+    List.filter (\d -> d /= oppositeDirection dir) allDirections
+
+
+allDirections : List Direction
+allDirections =
+    [ Up, Down, Left, Right ]
+
+
+oppositeDirection : Direction -> Direction
+oppositeDirection dir =
+    case dir of
+        Up ->
+            Down
+
+        Down ->
+            Up
+
+        Left ->
+            Right
+
+        Right ->
+            Left
 
 
 tick : Model -> Model
