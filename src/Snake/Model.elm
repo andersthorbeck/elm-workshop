@@ -37,6 +37,10 @@ type alias Vertical =
     Int
 
 
+
+-- Head of Snake is first Coord of List
+
+
 type alias Snake =
     List Coord
 

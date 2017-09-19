@@ -129,15 +129,51 @@ update msg model =
 
 changeDirection : Direction -> Model -> Model
 changeDirection dir model =
-    if List.member dir (legalDirectionChanges model.direction) then
+    if List.member dir (legalDirectionChanges model.snake) then
         { model | direction = dir }
     else
         model
 
 
-legalDirectionChanges : Direction -> List Direction
-legalDirectionChanges dir =
-    List.filter (\d -> d /= oppositeDirection dir) allDirections
+legalDirectionChanges : Snake -> List Direction
+legalDirectionChanges snake =
+    let
+        -- We derive direction from last tick instead of using current direction
+        -- directly from model, to avoid issues where you might change direction
+        -- several times between consecutive ticks.
+        currDir =
+            deriveDirectionLastTick snake
+    in
+        List.filter (\d -> d /= oppositeDirection currDir) allDirections
+
+
+deriveDirectionLastTick : Snake -> Direction
+deriveDirectionLastTick snake =
+    case snake of
+        head :: neck :: _ ->
+            let
+                ( xDiff, yDiff ) =
+                    subtract head neck
+            in
+                if (abs xDiff) >= (abs yDiff) then
+                    if xDiff >= 0 then
+                        Right
+                    else
+                        Left
+                else if yDiff >= 0 then
+                    Up
+                else
+                    Down
+
+        _ ->
+            -- This catch-all should never be matched, as the snake should never
+            -- be less than 2 tiles long.
+            Right
+
+
+subtract : Coord -> Coord -> Coord
+subtract ( x1, y1 ) ( x2, y2 ) =
+    ( x1 - x2, y1 - y2 )
 
 
 allDirections : List Direction
