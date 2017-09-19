@@ -210,9 +210,12 @@ tick model =
         newTail =
             dropLast model.snake
     in
-        -- TODO: Handle eating food
         -- TODO: Handle collisions
-        { model | snake = newHead :: newTail }
+        if newHead == model.food then
+            -- TODO: Generate new food
+            { model | snake = newHead :: model.snake, food = ( 0, 0 ) }
+        else
+            { model | snake = newHead :: newTail }
 
 
 nextHead : Direction -> Coord -> Coord
