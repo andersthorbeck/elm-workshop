@@ -212,8 +212,13 @@ tick model =
     in
         -- TODO: Handle collisions
         if newHead == model.food then
-            -- TODO: Generate new food
-            { model | snake = newHead :: model.snake, food = ( 0, 0 ) }
+            let
+                intermediateModel =
+                    { model | snake = newHead :: model.snake }
+            in
+                { intermediateModel
+                    | food = generateRandomFood intermediateModel
+                }
         else
             { model | snake = newHead :: newTail }
 
@@ -246,3 +251,38 @@ dropLast l =
 
         x :: xs ->
             x :: dropLast xs
+
+
+generateRandomFood : Model -> Food
+generateRandomFood model =
+    -- TODO: Make this actually random
+    let
+        eligibleFoodCoords =
+            List.filter
+                (\c -> not (List.member c model.snake))
+                (enumerateAllGridCoords model.gridDims)
+    in
+        Maybe.withDefault ( 0, 0 ) (List.head eligibleFoodCoords)
+
+
+enumerateAllGridCoords : GridDims -> List Coord
+enumerateAllGridCoords ( width, height ) =
+    let
+        xs =
+            List.range 0 (width - 1)
+
+        ys =
+            List.range 0 (height - 1)
+    in
+        cartesian xs ys
+
+
+
+-- Copied from https://gist.github.com/fredcy/5746b0af5ddb3f23f27470f41c883f86
+
+
+cartesian : List a -> List b -> List ( a, b )
+cartesian xs ys =
+    List.concatMap
+        (\x -> List.map (\y -> ( x, y )) ys)
+        xs
