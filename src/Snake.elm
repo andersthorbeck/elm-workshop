@@ -16,33 +16,55 @@ snakeApp =
 
 testModel : Model
 testModel =
-    { gridDims = ( 6, 5 )
-    , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
-    , direction = Left
-    , food = ( 1, 3 )
-    }
+    Playing
+        { gridDims = ( 6, 5 )
+        , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
+        , direction = Left
+        , food = ( 1, 3 )
+        }
 
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 []
-            [ text "Snake" ]
-        , div []
-            [ viewGrid (toGrid model) ]
-        , div []
-            -- TODO: Next step: Listen to keydowns to generate these messages. Look up subscriptions.
-            [ button [ onClick (ChangeDirection Left) ] [ text "<" ]
-            , button [ onClick (ChangeDirection Up) ] [ text "^" ]
-            , button [ onClick (ChangeDirection Down) ] [ text "v" ]
-            , button [ onClick (ChangeDirection Right) ] [ text ">" ]
+    let
+        gameView =
+            case model of
+                Playing activeGame ->
+                    viewPlaying activeGame
+
+                GameOver ->
+                    viewGameOver
+    in
+        div []
+            [ h1 []
+                [ text "Snake" ]
+            , div []
+                gameView
             ]
-        , div []
-            [ button [ onClick Tick ] [ text "tick" ] ]
+
+
+viewGameOver : List (Html a)
+viewGameOver =
+    [ text "Snek ded" ]
+
+
+viewPlaying : ActiveGame -> List (Html Msg)
+viewPlaying activeGame =
+    [ div []
+        [ viewGrid (toGrid activeGame) ]
+    , div []
+        -- TODO: Next step: Listen to keydowns to generate these messages. Look up subscriptions.
+        [ button [ onClick (ChangeDirection Left) ] [ text "<" ]
+        , button [ onClick (ChangeDirection Up) ] [ text "^" ]
+        , button [ onClick (ChangeDirection Down) ] [ text "v" ]
+        , button [ onClick (ChangeDirection Right) ] [ text ">" ]
         ]
+    , div []
+        [ button [ onClick Tick ] [ text "tick" ] ]
+    ]
 
 
-toGrid : Model -> Grid
+toGrid : ActiveGame -> Grid
 toGrid model =
     let
         ( _, numRows ) =
@@ -55,7 +77,7 @@ toGrid model =
         List.map (\r -> toRow model r) rows
 
 
-toRow : Model -> Int -> Row
+toRow : ActiveGame -> Int -> Row
 toRow model rowNum =
     let
         -- Remember, the row is the _vertical_ component, i.e. the y, not the x.
@@ -73,7 +95,7 @@ toRow model rowNum =
             columns
 
 
-toTile : Model -> Coord -> Tile
+toTile : ActiveGame -> Coord -> Tile
 toTile model coord =
     if List.member coord model.snake then
         SnakeTile
@@ -119,15 +141,20 @@ tileClass tile =
 
 update : Msg -> Model -> Model
 update msg model =
-    case msg of
-        ChangeDirection dir ->
-            changeDirection dir model
+    case model of
+        GameOver ->
+            GameOver
 
-        Tick ->
-            tick model
+        Playing activeGame ->
+            case msg of
+                ChangeDirection dir ->
+                    Playing (changeDirection dir activeGame)
+
+                Tick ->
+                    Playing (tick activeGame)
 
 
-changeDirection : Direction -> Model -> Model
+changeDirection : Direction -> ActiveGame -> ActiveGame
 changeDirection dir model =
     if List.member dir (legalDirectionChanges model.snake) then
         { model | direction = dir }
@@ -197,7 +224,7 @@ oppositeDirection dir =
             Left
 
 
-tick : Model -> Model
+tick : ActiveGame -> ActiveGame
 tick model =
     let
         -- The default should never be used, as the snake should never be 0 length.
@@ -253,7 +280,7 @@ dropLast l =
             x :: dropLast xs
 
 
-generateRandomFood : Model -> Food
+generateRandomFood : ActiveGame -> Food
 generateRandomFood model =
     -- TODO: Make this actually random
     let

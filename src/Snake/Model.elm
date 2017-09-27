@@ -10,6 +10,15 @@ type alias Test =
 
 
 type alias Model =
+    GameState
+
+
+type GameState
+    = Playing ActiveGame
+    | GameOver
+
+
+type alias ActiveGame =
     { gridDims : GridDims
     , snake : Snake
     , direction : Direction
