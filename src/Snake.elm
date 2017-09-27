@@ -65,41 +65,41 @@ viewPlaying activeGame =
 
 
 toGrid : ActiveGame -> Grid
-toGrid model =
+toGrid activeGame =
     let
         ( _, numRows ) =
-            model.gridDims
+            activeGame.gridDims
 
         -- Rows are numbered from the bottom, but rendered from the top.
         rows =
             List.reverse (List.range 0 (numRows - 1))
     in
-        List.map (\r -> toRow model r) rows
+        List.map (\r -> toRow activeGame r) rows
 
 
 toRow : ActiveGame -> Int -> Row
-toRow model rowNum =
+toRow activeGame rowNum =
     let
         -- Remember, the row is the _vertical_ component, i.e. the y, not the x.
         y =
             rowNum
 
         ( numColumns, _ ) =
-            model.gridDims
+            activeGame.gridDims
 
         columns =
             List.range 0 (numColumns - 1)
     in
         List.map
-            (\x -> toTile model ( x, y ))
+            (\x -> toTile activeGame ( x, y ))
             columns
 
 
 toTile : ActiveGame -> Coord -> Tile
-toTile model coord =
-    if List.member coord model.snake then
+toTile activeGame coord =
+    if List.member coord activeGame.snake then
         SnakeTile
-    else if coord == model.food then
+    else if coord == activeGame.food then
         FoodTile
     else
         FreeTile
@@ -155,18 +155,18 @@ update msg model =
 
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
-changeDirection dir model =
-    if List.member dir (legalDirectionChanges model.snake) then
-        { model | direction = dir }
+changeDirection dir activeGame =
+    if List.member dir (legalDirectionChanges activeGame.snake) then
+        { activeGame | direction = dir }
     else
-        model
+        activeGame
 
 
 legalDirectionChanges : Snake -> List Direction
 legalDirectionChanges snake =
     let
         -- We derive direction from last tick instead of using current direction
-        -- directly from model, to avoid issues where you might change direction
+        -- directly from activeGame, to avoid issues where you might change direction
         -- several times between consecutive ticks.
         currDir =
             deriveDirectionLastTick snake
@@ -225,29 +225,29 @@ oppositeDirection dir =
 
 
 tick : ActiveGame -> ActiveGame
-tick model =
+tick activeGame =
     let
         -- The default should never be used, as the snake should never be 0 length.
         originalHead =
-            Maybe.withDefault ( 0, 0 ) (List.head model.snake)
+            Maybe.withDefault ( 0, 0 ) (List.head activeGame.snake)
 
         newHead =
-            nextHead model.direction originalHead
+            nextHead activeGame.direction originalHead
 
         newTail =
-            dropLast model.snake
+            dropLast activeGame.snake
     in
         -- TODO: Handle collisions
-        if newHead == model.food then
+        if newHead == activeGame.food then
             let
-                intermediateModel =
-                    { model | snake = newHead :: model.snake }
+                intermediateGame =
+                    { activeGame | snake = newHead :: activeGame.snake }
             in
-                { intermediateModel
-                    | food = generateRandomFood intermediateModel
+                { intermediateGame
+                    | food = generateRandomFood intermediateGame
                 }
         else
-            { model | snake = newHead :: newTail }
+            { activeGame | snake = newHead :: newTail }
 
 
 nextHead : Direction -> Coord -> Coord
@@ -281,13 +281,13 @@ dropLast l =
 
 
 generateRandomFood : ActiveGame -> Food
-generateRandomFood model =
+generateRandomFood activeGame =
     -- TODO: Make this actually random
     let
         eligibleFoodCoords =
             List.filter
-                (\c -> not (List.member c model.snake))
-                (enumerateAllGridCoords model.gridDims)
+                (\c -> not (List.member c activeGame.snake))
+                (enumerateAllGridCoords activeGame.gridDims)
     in
         Maybe.withDefault ( 0, 0 ) (List.head eligibleFoodCoords)
 
