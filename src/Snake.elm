@@ -151,7 +151,7 @@ update msg model =
                     Playing (changeDirection dir activeGame)
 
                 Tick ->
-                    Playing (tick activeGame)
+                    tick activeGame
 
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
@@ -224,8 +224,20 @@ oppositeDirection dir =
             Left
 
 
-tick : ActiveGame -> ActiveGame
+tick : ActiveGame -> Model
 tick activeGame =
+    let
+        updatedGame =
+            uncheckedTick activeGame
+    in
+        if isGameOver updatedGame then
+            GameOver
+        else
+            Playing updatedGame
+
+
+uncheckedTick : ActiveGame -> ActiveGame
+uncheckedTick activeGame =
     let
         -- The default should never be used, as the snake should never be 0 length.
         originalHead =
