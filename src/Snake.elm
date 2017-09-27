@@ -250,6 +250,38 @@ tick activeGame =
             { activeGame | snake = newHead :: newTail }
 
 
+isGameOver : ActiveGame -> Bool
+isGameOver activeGame =
+    hasSnakeEatenSelf activeGame.snake || isSnakeOutsideGrid activeGame
+
+
+hasSnakeEatenSelf : Snake -> Bool
+hasSnakeEatenSelf snake =
+    case snake of
+        [] ->
+            -- Will never occur
+            False
+
+        head :: tail ->
+            List.member head tail
+
+
+isSnakeOutsideGrid : ActiveGame -> Bool
+isSnakeOutsideGrid activeGame =
+    case activeGame.snake of
+        [] ->
+            -- Will never occur
+            False
+
+        head :: _ ->
+            not (isCoordWithinGrid activeGame.gridDims head)
+
+
+isCoordWithinGrid : GridDims -> Coord -> Bool
+isCoordWithinGrid ( width, height ) ( x, y ) =
+    0 <= x && x < width && 0 <= y && y < height
+
+
 nextHead : Direction -> Coord -> Coord
 nextHead dir ( x, y ) =
     case dir of
