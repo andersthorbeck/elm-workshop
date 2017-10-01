@@ -247,7 +247,6 @@ uncheckedTick activeGame =
         newTail =
             dropLast activeGame.snake
     in
-        -- TODO: Handle collisions
         if newHead == activeGame.food then
             let
                 intermediateGame =
@@ -359,6 +358,7 @@ cartesian xs ys =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
+    -- TODO: Subscribe to time as well, for ticks
     Keyboard.downs keyCodeToMsg
 
 
