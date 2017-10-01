@@ -341,12 +341,6 @@ dropLast l =
             x :: dropLast xs
 
 
-generateRandomFood : ActiveGame -> Food
-generateRandomFood activeGame =
-    -- TODO: Make this actually random
-    Maybe.withDefault ( 0, 0 ) (List.head (eligibleFoodCoords activeGame))
-
-
 eligibleFoodCoords : ActiveGame -> List Coord
 eligibleFoodCoords activeGame =
     List.filter
