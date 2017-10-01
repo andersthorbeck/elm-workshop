@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Snake.Model exposing (..)
 import Keyboard
+import Time exposing (Time, second)
 
 
 snakeApp =
@@ -358,8 +359,10 @@ cartesian xs ys =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    -- TODO: Subscribe to time as well, for ticks
-    Keyboard.downs keyCodeToMsg
+    Sub.batch
+        [ Keyboard.downs keyCodeToMsg
+        , Time.every second (\_ -> Tick)
+        ]
 
 
 keyCodeToMsg : Keyboard.KeyCode -> Msg
