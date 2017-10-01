@@ -7,10 +7,11 @@ import Snake.Model exposing (..)
 
 
 snakeApp =
-    Html.beginnerProgram
-        { model = testModel
+    Html.program
+        { init = ( testModel, Cmd.none )
         , view = view
         , update = update
+        , subscriptions = \_ -> Sub.none
         }
 
 
@@ -139,19 +140,19 @@ tileClass tile =
             "unoccupied"
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model of
         GameOver ->
-            GameOver
+            ( GameOver, Cmd.none )
 
         Playing activeGame ->
             case msg of
                 ChangeDirection dir ->
-                    Playing (changeDirection dir activeGame)
+                    ( Playing (changeDirection dir activeGame), Cmd.none )
 
                 Tick ->
-                    tick activeGame
+                    ( tick activeGame, Cmd.none )
 
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
