@@ -74,7 +74,7 @@ type alias Food =
 type Msg
     = ChangeDirection Direction
     | Tick
-    | KeyDown Keyboard.KeyCode
+    | NoOp
 
 
 
