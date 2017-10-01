@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Snake.Model exposing (..)
 import Keyboard
-import Time exposing (Time, second)
+import Time exposing (Time, millisecond)
 import Random
 
 
@@ -391,9 +391,7 @@ subscriptions model =
         Playing _ ->
             Sub.batch
                 [ Keyboard.downs keyCodeToMsg
-
-                -- TODO: Faster ticks
-                , Time.every second (\_ -> Tick)
+                , Time.every (500 * millisecond) (\_ -> Tick)
                 ]
 
 
