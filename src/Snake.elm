@@ -379,10 +379,15 @@ infixl 9 !!
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch
-        [ Keyboard.downs keyCodeToMsg
-        , Time.every second (\_ -> Tick)
-        ]
+    case model of
+        GameOver ->
+            Sub.none
+
+        Playing _ ->
+            Sub.batch
+                [ Keyboard.downs keyCodeToMsg
+                , Time.every second (\_ -> Tick)
+                ]
 
 
 keyCodeToMsg : Keyboard.KeyCode -> Msg
