@@ -150,7 +150,7 @@ update msg model =
                     ( Playing (changeDirection dir activeGame), Cmd.none )
 
                 Tick ->
-                    ( tick activeGame, Cmd.none )
+                    tick activeGame
 
                 NoOp ->
                     ( Playing activeGame, Cmd.none )
@@ -226,19 +226,19 @@ oppositeDirection dir =
             Left
 
 
-tick : ActiveGame -> Model
+tick : ActiveGame -> ( Model, Cmd Msg )
 tick activeGame =
     let
-        updatedGame =
+        ( updatedGame, cmd ) =
             uncheckedTick activeGame
     in
         if isGameOver updatedGame then
-            GameOver
+            ( GameOver, cmd )
         else
-            Playing updatedGame
+            ( Playing updatedGame, cmd )
 
 
-uncheckedTick : ActiveGame -> ActiveGame
+uncheckedTick : ActiveGame -> ( ActiveGame, Cmd Msg )
 uncheckedTick activeGame =
     let
         -- The default should never be used, as the snake should never be 0 length.
@@ -256,11 +256,13 @@ uncheckedTick activeGame =
                 intermediateGame =
                     { activeGame | snake = newHead :: activeGame.snake }
             in
-                { intermediateGame
+                ( { intermediateGame
                     | food = generateRandomFood intermediateGame
-                }
+                  }
+                , Cmd.none
+                )
         else
-            { activeGame | snake = newHead :: newTail }
+            ( { activeGame | snake = newHead :: newTail }, Cmd.none )
 
 
 isGameOver : ActiveGame -> Bool
