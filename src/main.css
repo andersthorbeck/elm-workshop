@@ -80,6 +80,10 @@ ul {
   background-color: yellow;
 }
 
+.snake.head {
+  background-color: #dd0;
+}
+
 .food {
   background-color: red
 }

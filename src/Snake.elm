@@ -91,7 +91,9 @@ toRow activeGame rowNum =
 
 toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
-    if List.member coord activeGame.snake then
+    if List.head activeGame.snake == Just coord then
+        SnakeHeadTile
+    else if List.member coord activeGame.snake then
         SnakeTile
     else if coord == activeGame.food then
         FoodTile
@@ -123,6 +125,9 @@ viewTile tile =
 tileClass : Tile -> String
 tileClass tile =
     case tile of
+        SnakeHeadTile ->
+            "snake head"
+
         SnakeTile ->
             "snake"
 

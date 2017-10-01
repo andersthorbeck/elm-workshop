@@ -93,6 +93,7 @@ type Tile
     = SnakeTile
     | FoodTile
     | FreeTile
+    | SnakeHeadTile
 
 
 type alias SnakeLength =
