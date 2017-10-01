@@ -163,7 +163,6 @@ update msg model =
 
                 NewFood index ->
                     let
-                        -- TODO: Fix index outside of bounds bug
                         newFood =
                             -- The default should never be used, as the index
                             -- should always be generated in range
@@ -275,7 +274,7 @@ uncheckedTick activeGame =
                     { activeGame | snake = newHead :: activeGame.snake }
 
                 numEligibleFoodCoords =
-                    List.length (eligibleFoodCoords activeGame)
+                    List.length (eligibleFoodCoords intermediateGame)
             in
                 ( intermediateGame
                 , Random.generate NewFood
