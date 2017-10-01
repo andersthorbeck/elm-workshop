@@ -55,8 +55,6 @@ viewPlaying : ActiveGame -> List (Html Msg)
 viewPlaying activeGame =
     [ div []
         [ viewGrid (toGrid activeGame) ]
-    , div []
-        [ button [ onClick Tick ] [ text "tick" ] ]
     ]
 
 
