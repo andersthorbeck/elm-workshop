@@ -4,6 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Snake.Model exposing (..)
+import Keyboard
 
 
 snakeApp =
@@ -11,7 +12,7 @@ snakeApp =
         { init = ( testModel, Cmd.none )
         , view = view
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = subscriptions
         }
 
 
@@ -152,6 +153,9 @@ update msg model =
                     ( Playing (changeDirection dir activeGame), Cmd.none )
 
                 Tick ->
+                    ( tick activeGame, Cmd.none )
+
+                KeyDown keyCode ->
                     ( tick activeGame, Cmd.none )
 
 
@@ -358,3 +362,8 @@ cartesian xs ys =
     List.concatMap
         (\x -> List.map (\y -> ( x, y )) ys)
         xs
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Keyboard.downs KeyDown

@@ -1,5 +1,7 @@
 module Snake.Model exposing (..)
 
+import Keyboard
+
 
 type alias Test =
     String
@@ -72,6 +74,7 @@ type alias Food =
 type Msg
     = ChangeDirection Direction
     | Tick
+    | KeyDown Keyboard.KeyCode
 
 
 
