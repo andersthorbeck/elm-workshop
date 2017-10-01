@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Snake.Model exposing (..)
 import Keyboard
 import Time exposing (Time, second)
+import Random
 
 
 snakeApp =
@@ -155,6 +156,16 @@ update msg model =
                 NoOp ->
                     ( Playing activeGame, Cmd.none )
 
+                NewFood index ->
+                    let
+                        newFood =
+                            -- The default should never be used, as the index
+                            -- should always be generated in range
+                            Maybe.withDefault ( 0, 0 )
+                                ((eligibleFoodCoords activeGame) !! index)
+                    in
+                        ( Playing { activeGame | food = newFood }, Cmd.none )
+
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
 changeDirection dir activeGame =
@@ -253,13 +264,16 @@ uncheckedTick activeGame =
     in
         if newHead == activeGame.food then
             let
+                -- TODO: Hack: food is still hidden under snake until a new one is generated
                 intermediateGame =
                     { activeGame | snake = newHead :: activeGame.snake }
+
+                numEligibleFoodCoords =
+                    List.length (eligibleFoodCoords activeGame)
             in
-                ( { intermediateGame
-                    | food = generateRandomFood intermediateGame
-                  }
-                , Cmd.none
+                ( intermediateGame
+                , Random.generate NewFood
+                    (Random.int 0 (numEligibleFoodCoords - 1))
                 )
         else
             ( { activeGame | snake = newHead :: newTail }, Cmd.none )
@@ -361,6 +375,12 @@ cartesian xs ys =
     List.concatMap
         (\x -> List.map (\y -> ( x, y )) ys)
         xs
+
+
+infixl 9 !!
+(!!) : List a -> Int -> Maybe a
+(!!) xs n =
+    List.head (List.drop n xs)
 
 
 subscriptions : Model -> Sub Msg

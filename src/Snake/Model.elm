@@ -75,6 +75,7 @@ type Msg
     = ChangeDirection Direction
     | Tick
     | NoOp
+    | NewFood Int
 
 
 
