@@ -9,6 +9,9 @@ import Time exposing (Time, second)
 import Random
 
 
+-- TODO: neater style
+
+
 snakeApp =
     Html.program
         { init = ( testModel, Cmd.none )
@@ -104,6 +107,7 @@ toTile activeGame coord =
 
 viewGrid : Grid -> Html a
 viewGrid grid =
+    -- TODO: More detailed snake-view
     div
         [ class "grid" ]
         (List.map viewRow grid)
@@ -147,6 +151,7 @@ update msg model =
 
         Playing activeGame ->
             case msg of
+                -- TODO: queue direction changes?
                 ChangeDirection dir ->
                     ( Playing (changeDirection dir activeGame), Cmd.none )
 
@@ -158,6 +163,7 @@ update msg model =
 
                 NewFood index ->
                     let
+                        -- TODO: Fix index outside of bounds bug
                         newFood =
                             -- The default should never be used, as the index
                             -- should always be generated in range
@@ -386,6 +392,8 @@ subscriptions model =
         Playing _ ->
             Sub.batch
                 [ Keyboard.downs keyCodeToMsg
+
+                -- TODO: Faster ticks
                 , Time.every second (\_ -> Tick)
                 ]
 
