@@ -330,13 +330,14 @@ dropLast l =
 generateRandomFood : ActiveGame -> Food
 generateRandomFood activeGame =
     -- TODO: Make this actually random
-    let
-        eligibleFoodCoords =
-            List.filter
-                (\c -> not (List.member c activeGame.snake))
-                (enumerateAllGridCoords activeGame.gridDims)
-    in
-        Maybe.withDefault ( 0, 0 ) (List.head eligibleFoodCoords)
+    Maybe.withDefault ( 0, 0 ) (List.head (eligibleFoodCoords activeGame))
+
+
+eligibleFoodCoords : ActiveGame -> List Coord
+eligibleFoodCoords activeGame =
+    List.filter
+        (\c -> not (List.member c activeGame.snake))
+        (enumerateAllGridCoords activeGame.gridDims)
 
 
 enumerateAllGridCoords : GridDims -> List Coord
