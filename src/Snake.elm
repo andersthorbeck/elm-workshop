@@ -253,7 +253,9 @@ tick activeGame =
         ( updatedGame, cmd ) =
             uncheckedTick activeGame
     in
-        if isGameOver updatedGame then
+        if doesSnakeCoverEntireGrid updatedGame then
+            ( GameOver Alive, cmd )
+        else if isGameOver updatedGame then
             ( GameOver Dead, cmd )
         else
             ( Playing updatedGame, cmd )
@@ -287,6 +289,15 @@ uncheckedTick activeGame =
                 )
         else
             ( { activeGame | snake = newHead :: newTail }, Cmd.none )
+
+
+doesSnakeCoverEntireGrid : ActiveGame -> Bool
+doesSnakeCoverEntireGrid activeGame =
+    let
+        ( width, height ) =
+            activeGame.gridDims
+    in
+        (List.length activeGame.snake) == width * height
 
 
 isGameOver : ActiveGame -> Bool
