@@ -9,9 +9,6 @@ import Time exposing (Time, millisecond)
 import Random
 
 
--- TODO: neater style
-
-
 snakeApp =
     Html.program
         { init = ( testModel, Cmd.none )
@@ -63,7 +60,7 @@ viewGameOver health =
 viewPlaying : ActiveGame -> List (Html Msg)
 viewPlaying activeGame =
     [ div []
-        [ viewGrid (toGrid activeGame) ]
+        [ activeGame |> toGrid |> viewGrid ]
     ]
 
 
@@ -75,9 +72,9 @@ toGrid activeGame =
 
         -- Rows are numbered from the bottom, but rendered from the top.
         rows =
-            List.reverse (List.range 0 (numRows - 1))
+            List.reverse <| List.range 0 <| numRows - 1
     in
-        List.map (\r -> toRow activeGame r) rows
+        List.map (toRow activeGame) rows
 
 
 toRow : ActiveGame -> Int -> Row
@@ -91,7 +88,7 @@ toRow activeGame rowNum =
             activeGame.gridDims
 
         columns =
-            List.range 0 (numColumns - 1)
+            List.range 0 <| numColumns - 1
     in
         List.map
             (\x -> toTile activeGame ( x, y ))
@@ -128,7 +125,7 @@ viewRow row =
 viewTile : Tile -> Html a
 viewTile tile =
     div
-        [ class ("tile " ++ (tileClass tile)) ]
+        [ class <| "tile " ++ (tileClass tile) ]
         []
 
 
@@ -158,7 +155,7 @@ update msg model =
             case msg of
                 -- TODO: queue direction changes?
                 ChangeDirection dir ->
-                    ( Playing (changeDirection dir activeGame), Cmd.none )
+                    ( Playing <| changeDirection dir activeGame, Cmd.none )
 
                 Tick ->
                     tick activeGame
@@ -171,8 +168,9 @@ update msg model =
                         newFood =
                             -- The default should never be used, as the index
                             -- should always be generated in range
-                            Maybe.withDefault ( 0, 0 )
-                                ((eligibleFoodCoords activeGame) !! index)
+                            (eligibleFoodCoords activeGame)
+                                !! index
+                                |> Maybe.withDefault ( 0, 0 )
                     in
                         ( Playing { activeGame | food = Just newFood }
                         , Cmd.none
@@ -181,7 +179,7 @@ update msg model =
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
 changeDirection dir activeGame =
-    if List.member dir (legalDirectionChanges activeGame.snake) then
+    if List.member dir <| legalDirectionChanges activeGame.snake then
         { activeGame | direction = dir }
     else
         activeGame
@@ -268,7 +266,7 @@ uncheckedTick activeGame =
     let
         -- The default should never be used, as the snake should never be 0 length.
         originalHead =
-            Maybe.withDefault ( 0, 0 ) (List.head activeGame.snake)
+            List.head activeGame.snake |> Maybe.withDefault ( 0, 0 )
 
         newHead =
             nextHead activeGame.direction originalHead
@@ -285,7 +283,7 @@ uncheckedTick activeGame =
                     }
 
                 numEligibleFoodCoords =
-                    List.length (eligibleFoodCoords intermediateGame)
+                    List.length <| eligibleFoodCoords intermediateGame
             in
                 ( intermediateGame
                 , Random.generate NewFood
@@ -328,7 +326,7 @@ isSnakeOutsideGrid activeGame =
             False
 
         head :: _ ->
-            not (isCoordWithinGrid activeGame.gridDims head)
+            not <| isCoordWithinGrid activeGame.gridDims head
 
 
 isCoordWithinGrid : GridDims -> Coord -> Bool
@@ -369,18 +367,19 @@ dropLast l =
 eligibleFoodCoords : ActiveGame -> List Coord
 eligibleFoodCoords activeGame =
     List.filter
-        (\c -> not (List.member c activeGame.snake))
-        (enumerateAllGridCoords activeGame.gridDims)
+        (\c -> not <| List.member c activeGame.snake)
+    <|
+        enumerateAllGridCoords activeGame.gridDims
 
 
 enumerateAllGridCoords : GridDims -> List Coord
 enumerateAllGridCoords ( width, height ) =
     let
         xs =
-            List.range 0 (width - 1)
+            List.range 0 <| width - 1
 
         ys =
-            List.range 0 (height - 1)
+            List.range 0 <| height - 1
     in
         cartesian xs ys
 
@@ -399,7 +398,7 @@ cartesian xs ys =
 infixl 9 !!
 (!!) : List a -> Int -> Maybe a
 (!!) xs n =
-    List.head (List.drop n xs)
+    List.head <| List.drop n xs
 
 
 subscriptions : Model -> Sub Msg
