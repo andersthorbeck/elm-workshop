@@ -24,7 +24,7 @@ type alias ActiveGame =
     { gridDims : GridDims
     , snake : Snake
     , direction : Direction
-    , food : Food
+    , food : Maybe Food
     }
 
 

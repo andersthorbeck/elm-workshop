@@ -27,7 +27,7 @@ testModel =
         { gridDims = ( 6, 5 )
         , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
         , direction = Left
-        , food = ( 1, 3 )
+        , food = Just ( 1, 3 )
         }
 
 
@@ -104,7 +104,7 @@ toTile activeGame coord =
         SnakeHeadTile
     else if List.member coord activeGame.snake then
         SnakeTile
-    else if coord == activeGame.food then
+    else if Just coord == activeGame.food then
         FoodTile
     else
         FreeTile
@@ -174,7 +174,9 @@ update msg model =
                             Maybe.withDefault ( 0, 0 )
                                 ((eligibleFoodCoords activeGame) !! index)
                     in
-                        ( Playing { activeGame | food = newFood }, Cmd.none )
+                        ( Playing { activeGame | food = Just newFood }
+                        , Cmd.none
+                        )
 
 
 changeDirection : Direction -> ActiveGame -> ActiveGame
@@ -274,11 +276,13 @@ uncheckedTick activeGame =
         newTail =
             dropLast activeGame.snake
     in
-        if newHead == activeGame.food then
+        if Just newHead == activeGame.food then
             let
-                -- TODO: Hack: food is still hidden under snake until a new one is generated
                 intermediateGame =
-                    { activeGame | snake = newHead :: activeGame.snake }
+                    { activeGame
+                        | snake = newHead :: activeGame.snake
+                        , food = Nothing
+                    }
 
                 numEligibleFoodCoords =
                     List.length (eligibleFoodCoords intermediateGame)
