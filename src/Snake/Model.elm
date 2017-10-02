@@ -17,7 +17,7 @@ type alias Model =
 
 type GameState
     = Playing ActiveGame
-    | GameOver
+    | GameOver Health
 
 
 type alias ActiveGame =
@@ -26,6 +26,11 @@ type alias ActiveGame =
     , direction : Direction
     , food : Food
     }
+
+
+type Health
+    = Alive
+    | Dead
 
 
 

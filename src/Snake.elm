@@ -39,8 +39,8 @@ view model =
                 Playing activeGame ->
                     viewPlaying activeGame
 
-                GameOver ->
-                    viewGameOver
+                GameOver health ->
+                    viewGameOver health
     in
         div []
             [ h1 []
@@ -50,9 +50,14 @@ view model =
             ]
 
 
-viewGameOver : List (Html a)
-viewGameOver =
-    [ text "Snek ded" ]
+viewGameOver : Health -> List (Html a)
+viewGameOver health =
+    case health of
+        Dead ->
+            [ text "Snek ded" ]
+
+        Alive ->
+            [ text "You win!" ]
 
 
 viewPlaying : ActiveGame -> List (Html Msg)
@@ -146,8 +151,8 @@ tileClass tile =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model of
-        GameOver ->
-            ( GameOver, Cmd.none )
+        GameOver health ->
+            ( GameOver health, Cmd.none )
 
         Playing activeGame ->
             case msg of
@@ -249,7 +254,7 @@ tick activeGame =
             uncheckedTick activeGame
     in
         if isGameOver updatedGame then
-            ( GameOver, cmd )
+            ( GameOver Dead, cmd )
         else
             ( Playing updatedGame, cmd )
 
@@ -385,7 +390,7 @@ infixl 9 !!
 subscriptions : Model -> Sub Msg
 subscriptions model =
     case model of
-        GameOver ->
+        GameOver _ ->
             Sub.none
 
         Playing _ ->
