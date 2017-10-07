@@ -11,15 +11,15 @@ import Random
 
 snakeApp =
     Html.program
-        { init = ( testModel, Cmd.none )
+        { init = ( initialModel, Cmd.none )
         , view = view
         , update = update
         , subscriptions = subscriptions
         }
 
 
-testModel : Model
-testModel =
+initialModel : Model
+initialModel =
     Playing
         { gridDims = ( 6, 5 )
         , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
