@@ -97,7 +97,14 @@ type alias Row =
 
 
 type Tile
-    = SnakeTile
+    = FreeTile
+    | SnakeHeadTile Direction
+    | SnakeBodyTile TurningDirection Direction
+    | SnakeTailTile Direction
     | FoodTile
-    | FreeTile
-    | SnakeHeadTile
+
+
+type TurningDirection
+    = Forward
+    | LeftTurn
+    | RightTurn
