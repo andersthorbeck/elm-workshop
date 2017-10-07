@@ -49,12 +49,17 @@ view model =
 
 viewGameOver : Health -> List (Html a)
 viewGameOver health =
-    case health of
-        Dead ->
-            [ text "Snek ded" ]
+    let
+        gameOverText =
+            case health of
+                Dead ->
+                    "Snek ded"
 
-        Alive ->
-            [ text "You win!" ]
+                Alive ->
+                    "You win!"
+    in
+        [ p [] [ text gameOverText ]
+        ]
 
 
 viewPlaying : ActiveGame -> List (Html Msg)
