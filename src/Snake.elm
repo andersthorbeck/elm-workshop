@@ -108,7 +108,7 @@ toTile activeGame coord =
     else if last activeGame.snake == Just coord then
         SnakeTile <| SnakeTail <| deriveTailDirection activeGame.snake
     else if List.member coord activeGame.snake then
-        SnakeTile <| deriveSnakeBodyTile coord activeGame
+        SnakeTile <| deriveSnakeBody coord activeGame
     else if Just coord == activeGame.food then
         FoodTile
     else
@@ -136,8 +136,8 @@ deriveTailDirection snake =
         direction
 
 
-deriveSnakeBodyTile : Coord -> ActiveGame -> SnakePartView
-deriveSnakeBodyTile coord activeGame =
+deriveSnakeBody : Coord -> ActiveGame -> SnakePartView
+deriveSnakeBody coord activeGame =
     -- Prerequisite: Assumes we already know the coord is part of the snake,
     -- and that we know the snake is at least length 3.
     let
