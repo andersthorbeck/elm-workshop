@@ -47,7 +47,7 @@ view model =
             ]
 
 
-viewGameOver : Health -> List (Html a)
+viewGameOver : Health -> List (Html Msg)
 viewGameOver health =
     let
         gameOverText =
@@ -59,6 +59,7 @@ viewGameOver health =
                     "You win!"
     in
         [ p [] [ text gameOverText ]
+        , button [ onClick RestartGame ] [ text "Restart" ]
         ]
 
 
@@ -154,7 +155,12 @@ update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case model of
         GameOver health ->
-            ( GameOver health, Cmd.none )
+            case msg of
+                RestartGame ->
+                    ( initialModel, Cmd.none )
+
+                _ ->
+                    ( GameOver health, Cmd.none )
 
         Playing activeGame ->
             case msg of
@@ -164,9 +170,6 @@ update msg model =
 
                 Tick ->
                     tick activeGame
-
-                NoOp ->
-                    ( Playing activeGame, Cmd.none )
 
                 NewFood index ->
                     let
@@ -180,6 +183,9 @@ update msg model =
                         ( Playing { activeGame | food = Just newFood }
                         , Cmd.none
                         )
+
+                _ ->
+                    ( Playing activeGame, Cmd.none )
 
 
 changeDirection : Direction -> ActiveGame -> ActiveGame

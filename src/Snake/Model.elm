@@ -81,6 +81,7 @@ type Msg
     | Tick
     | NoOp
     | NewFood Int
+    | RestartGame
 
 
 
