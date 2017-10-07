@@ -106,8 +106,7 @@ toTile activeGame coord =
     if List.head activeGame.snake == Just coord then
         SnakeHeadTile activeGame.direction
     else if last activeGame.snake == Just coord then
-        -- TODO: provide proper argument here
-        SnakeTailTile activeGame.direction
+        SnakeTailTile <| deriveTailDirection activeGame.snake
     else if List.member coord activeGame.snake then
         -- TODO: provide proper values here
         SnakeBodyTile Forward activeGame.direction
@@ -115,6 +114,27 @@ toTile activeGame coord =
         FoodTile
     else
         FreeTile
+
+
+deriveTailDirection : Snake -> Direction
+deriveTailDirection snake =
+    let
+        snakeLength =
+            List.length snake
+
+        finalTwo =
+            List.drop (snakeLength - 2) snake
+
+        direction =
+            case finalTwo of
+                almostTail :: tail :: [] ->
+                    directionBetween tail almostTail
+
+                _ ->
+                    -- Should never happen
+                    Left
+    in
+        direction
 
 
 turningDirectionOf : Direction -> Direction -> TurningDirection
