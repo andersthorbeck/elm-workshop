@@ -108,8 +108,7 @@ toTile activeGame coord =
     else if last activeGame.snake == Just coord then
         SnakeTailTile <| deriveTailDirection activeGame.snake
     else if List.member coord activeGame.snake then
-        -- TODO: provide proper values here
-        SnakeBodyTile Forward activeGame.direction
+        deriveSnakeBodyTile coord activeGame
     else if Just coord == activeGame.food then
         FoodTile
     else
@@ -135,6 +134,52 @@ deriveTailDirection snake =
                     Left
     in
         direction
+
+
+deriveSnakeBodyTile : Coord -> ActiveGame -> Tile
+deriveSnakeBodyTile coord activeGame =
+    -- Prerequisite: Assumes we already know the coord is part of the snake,
+    -- and that we know the snake is at least length 3.
+    let
+        snake =
+            activeGame.snake
+
+        maybeIndex =
+            elemIndex coord snake
+    in
+        case maybeIndex of
+            -- Should never happen, we've already determined the coord is
+            -- part of the snake.
+            -- TODO: Redesign data types to avoid so many "should never
+            -- happen"s.
+            Nothing ->
+                SnakeBodyTile Forward activeGame.direction
+
+            Just index ->
+                let
+                    bodyCoords =
+                        snake
+                            |> List.drop (index - 1)
+                            |> List.take 3
+                in
+                    case bodyCoords of
+                        [ bh, bb, bt ] ->
+                            let
+                                prevDir =
+                                    directionBetween bt bb
+
+                                newDir =
+                                    directionBetween bb bh
+
+                                turnDir =
+                                    turningDirectionOf prevDir newDir
+                            in
+                                SnakeBodyTile turnDir newDir
+
+                        _ ->
+                            -- Should never happen, we know the snake is at
+                            -- least 3 coords long at this point
+                            SnakeBodyTile Forward activeGame.direction
 
 
 turningDirectionOf : Direction -> Direction -> TurningDirection
@@ -491,6 +536,23 @@ infixl 9 !!
 last : List a -> Maybe a
 last xs =
     xs |> List.reverse |> List.head
+
+
+elemIndex : a -> List a -> Maybe Int
+elemIndex x xs =
+    let
+        elemIndexHelper x xs n =
+            case xs of
+                [] ->
+                    Nothing
+
+                y :: ys ->
+                    if x == y then
+                        Just n
+                    else
+                        elemIndexHelper x ys (n + 1)
+    in
+        elemIndexHelper x xs 0
 
 
 subscriptions : Model -> Sub Msg
