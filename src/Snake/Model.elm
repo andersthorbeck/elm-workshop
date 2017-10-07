@@ -101,7 +101,3 @@ type Tile
     | FoodTile
     | FreeTile
     | SnakeHeadTile
-
-
-type alias SnakeLength =
-    Int
