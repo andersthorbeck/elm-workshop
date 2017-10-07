@@ -237,10 +237,10 @@ deriveDirectionLastTick snake =
 
 
 directionBetween : Coord -> Coord -> Direction
-directionBetween neck head =
+directionBetween from to =
     let
         ( xDiff, yDiff ) =
-            subtract head neck
+            subtract to from
     in
         if (abs xDiff) >= (abs yDiff) then
             if xDiff >= 0 then
