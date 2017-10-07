@@ -114,6 +114,18 @@ toTile activeGame coord =
         FreeTile
 
 
+turningDirectionOf : Direction -> Direction -> TurningDirection
+turningDirectionOf prevDir newDir =
+    if newDir == clockwiseDirectionOf prevDir then
+        RightTurn
+    else if newDir == counterClockwiseDirectionOf prevDir then
+        LeftTurn
+    else
+        -- newDir should never be the opposite direction of prevDir,
+        -- default to Forward
+        Forward
+
+
 viewGrid : Grid -> Html a
 viewGrid grid =
     -- TODO: More detailed snake-view
@@ -260,6 +272,38 @@ oppositeDirection dir =
 
         Right ->
             Left
+
+
+clockwiseDirectionOf : Direction -> Direction
+clockwiseDirectionOf dir =
+    case dir of
+        Up ->
+            Right
+
+        Right ->
+            Down
+
+        Down ->
+            Left
+
+        Left ->
+            Up
+
+
+counterClockwiseDirectionOf : Direction -> Direction
+counterClockwiseDirectionOf dir =
+    case dir of
+        Up ->
+            Left
+
+        Left ->
+            Down
+
+        Down ->
+            Right
+
+        Right ->
+            Up
 
 
 tick : ActiveGame -> ( Model, Cmd Msg )
