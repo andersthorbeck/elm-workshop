@@ -105,6 +105,9 @@ toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
     if List.head activeGame.snake == Just coord then
         SnakeHeadTile activeGame.direction
+    else if last activeGame.snake == Just coord then
+        -- TODO: provide proper argument here
+        SnakeTailTile activeGame.direction
     else if List.member coord activeGame.snake then
         -- TODO: provide proper values here
         SnakeBodyTile Forward activeGame.direction
@@ -463,6 +466,11 @@ infixl 9 !!
 (!!) : List a -> Int -> Maybe a
 (!!) xs n =
     List.head <| List.drop n xs
+
+
+last : List a -> Maybe a
+last xs =
+    xs |> List.reverse |> List.head
 
 
 subscriptions : Model -> Sub Msg
