@@ -104,11 +104,11 @@ toRow activeGame rowNum =
 toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
     if List.head activeGame.snake == Just coord then
-        SnakeHeadTile activeGame.direction
+        SnakeTile <| SnakeHead activeGame.direction
     else if last activeGame.snake == Just coord then
-        SnakeTailTile <| deriveTailDirection activeGame.snake
+        SnakeTile <| SnakeTail <| deriveTailDirection activeGame.snake
     else if List.member coord activeGame.snake then
-        deriveSnakeBodyTile coord activeGame
+        SnakeTile <| deriveSnakeBodyTile coord activeGame
     else if Just coord == activeGame.food then
         FoodTile
     else
@@ -136,7 +136,7 @@ deriveTailDirection snake =
         direction
 
 
-deriveSnakeBodyTile : Coord -> ActiveGame -> Tile
+deriveSnakeBodyTile : Coord -> ActiveGame -> SnakePartView
 deriveSnakeBodyTile coord activeGame =
     -- Prerequisite: Assumes we already know the coord is part of the snake,
     -- and that we know the snake is at least length 3.
@@ -153,7 +153,7 @@ deriveSnakeBodyTile coord activeGame =
             -- TODO: Redesign data types to avoid so many "should never
             -- happen"s.
             Nothing ->
-                SnakeBodyTile Forward activeGame.direction
+                SnakeBody Forward activeGame.direction
 
             Just index ->
                 let
@@ -174,12 +174,12 @@ deriveSnakeBodyTile coord activeGame =
                                 turnDir =
                                     turningDirectionOf prevDir newDir
                             in
-                                SnakeBodyTile turnDir newDir
+                                SnakeBody turnDir newDir
 
                         _ ->
                             -- Should never happen, we know the snake is at
                             -- least 3 coords long at this point
-                            SnakeBodyTile Forward activeGame.direction
+                            SnakeBody Forward activeGame.direction
 
 
 turningDirectionOf : Direction -> Direction -> TurningDirection
@@ -219,14 +219,16 @@ viewTile tile =
 tileClass : Tile -> String
 tileClass tile =
     case tile of
-        SnakeHeadTile dir ->
-            "snake head"
+        SnakeTile snakePart ->
+            case snakePart of
+                SnakeHead dir ->
+                    "snake head"
 
-        SnakeBodyTile turnDir dir ->
-            "snake"
+                SnakeBody turnDir dir ->
+                    "snake"
 
-        SnakeTailTile dir ->
-            "snake tail"
+                SnakeTail dir ->
+                    "snake tail"
 
         FoodTile ->
             "food"
