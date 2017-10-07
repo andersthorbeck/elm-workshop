@@ -228,24 +228,29 @@ deriveDirectionLastTick : Snake -> Direction
 deriveDirectionLastTick snake =
     case snake of
         head :: neck :: _ ->
-            let
-                ( xDiff, yDiff ) =
-                    subtract head neck
-            in
-                if (abs xDiff) >= (abs yDiff) then
-                    if xDiff >= 0 then
-                        Right
-                    else
-                        Left
-                else if yDiff >= 0 then
-                    Up
-                else
-                    Down
+            directionBetween neck head
 
         _ ->
             -- This catch-all should never be matched, as the snake should never
             -- be less than 2 tiles long.
             Right
+
+
+directionBetween : Coord -> Coord -> Direction
+directionBetween neck head =
+    let
+        ( xDiff, yDiff ) =
+            subtract head neck
+    in
+        if (abs xDiff) >= (abs yDiff) then
+            if xDiff >= 0 then
+                Right
+            else
+                Left
+        else if yDiff >= 0 then
+            Up
+        else
+            Down
 
 
 subtract : Coord -> Coord -> Coord
