@@ -7,6 +7,7 @@ import Snake.Model exposing (..)
 import Keyboard
 import Time exposing (Time, millisecond)
 import Random
+import List.Extra exposing ((!!))
 
 
 snakeApp =
@@ -105,7 +106,7 @@ toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
     if List.head activeGame.snake == Just coord then
         SnakeTile <| SnakeHead activeGame.direction
-    else if last activeGame.snake == Just coord then
+    else if List.Extra.last activeGame.snake == Just coord then
         SnakeTile <| SnakeTail <| deriveTailDirection activeGame.snake
     else if List.member coord activeGame.snake then
         SnakeTile <| deriveSnakeBody coord activeGame
@@ -145,7 +146,7 @@ deriveSnakeBody coord activeGame =
             activeGame.snake
 
         maybeIndex =
-            elemIndex coord snake
+            List.Extra.elemIndex coord snake
     in
         case maybeIndex of
             -- Should never happen, we've already determined the coord is
@@ -527,34 +528,6 @@ cartesian xs ys =
     List.concatMap
         (\x -> List.map (\y -> ( x, y )) ys)
         xs
-
-
-infixl 9 !!
-(!!) : List a -> Int -> Maybe a
-(!!) xs n =
-    List.head <| List.drop n xs
-
-
-last : List a -> Maybe a
-last xs =
-    xs |> List.reverse |> List.head
-
-
-elemIndex : a -> List a -> Maybe Int
-elemIndex x xs =
-    let
-        elemIndexHelper x xs n =
-            case xs of
-                [] ->
-                    Nothing
-
-                y :: ys ->
-                    if x == y then
-                        Just n
-                    else
-                        elemIndexHelper x ys (n + 1)
-    in
-        elemIndexHelper x xs 0
 
 
 subscriptions : Model -> Sub Msg
