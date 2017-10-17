@@ -1,6 +1,7 @@
 module Snake.Model exposing (..)
 
 import Keyboard
+import List.Min2Elems exposing (..)
 
 
 type alias Test =
@@ -58,7 +59,7 @@ type alias Vertical =
 
 
 type alias Snake =
-    List Coord
+    ListMin2Elems Coord
 
 
 type Direction

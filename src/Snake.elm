@@ -8,6 +8,7 @@ import Keyboard
 import Time exposing (Time, millisecond)
 import Random
 import List.Extra exposing ((!!))
+import List.Min2Elems as List2
 
 
 snakeApp =
@@ -23,7 +24,7 @@ initialModel : Model
 initialModel =
     Playing
         { gridDims = ( 6, 5 )
-        , snake = [ ( 2, 2 ), ( 3, 2 ), ( 4, 2 ) ]
+        , snake = List2.withAtLeastTwoElements ( 2, 2 ) ( 3, 2 ) [ ( 4, 2 ) ]
         , direction = Left
         , food = Just ( 1, 3 )
         }
@@ -104,11 +105,11 @@ toRow activeGame rowNum =
 
 toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
-    if List.head activeGame.snake == Just coord then
+    if List2.head activeGame.snake == coord then
         SnakeTile <| SnakeHead activeGame.direction
-    else if List.Extra.last activeGame.snake == Just coord then
+    else if List2.last activeGame.snake == coord then
         SnakeTile <| SnakeTail <| deriveTailDirection activeGame.snake
-    else if List.member coord activeGame.snake then
+    else if List2.member coord activeGame.snake then
         SnakeTile <| deriveSnakeBody coord activeGame
     else if Just coord == activeGame.food then
         FoodTile
@@ -120,19 +121,13 @@ deriveTailDirection : Snake -> Direction
 deriveTailDirection snake =
     let
         snakeLength =
-            List.length snake
+            List2.length snake
 
         finalTwo =
-            List.drop (snakeLength - 2) snake
+            List2.drop (snakeLength - 2) snake
 
         direction =
-            case finalTwo of
-                almostTail :: tail :: [] ->
-                    directionBetween tail almostTail
-
-                _ ->
-                    -- Should never happen
-                    Left
+            directionBetween finalTwo.neck finalTwo.head
     in
         direction
 
@@ -146,7 +141,7 @@ deriveSnakeBody coord activeGame =
             activeGame.snake
 
         maybeIndex =
-            List.Extra.elemIndex coord snake
+            List2.elemIndex coord snake
     in
         case maybeIndex of
             -- Should never happen, we've already determined the coord is
@@ -160,27 +155,36 @@ deriveSnakeBody coord activeGame =
                 let
                     bodyCoords =
                         snake
-                            |> List.drop (index - 1)
-                            |> List.take 3
+                            |> List2.drop (index - 1)
+                            |> List2.take 3
+
+                    bh =
+                        bodyCoords.head
+
+                    bb =
+                        bodyCoords.neck
+
+                    btMaybe =
+                        List.head bodyCoords.rest
+
+                    newDir =
+                        directionBetween bb bh
                 in
-                    case bodyCoords of
-                        [ bh, bb, bt ] ->
+                    case btMaybe of
+                        Just bt ->
                             let
                                 prevDir =
                                     directionBetween bt bb
-
-                                newDir =
-                                    directionBetween bb bh
 
                                 turnDir =
                                     turningDirectionOf prevDir newDir
                             in
                                 SnakeBody turnDir newDir
 
-                        _ ->
+                        Nothing ->
                             -- Should never happen, we know the snake is at
                             -- least 3 coords long at this point
-                            SnakeBody Forward activeGame.direction
+                            SnakeBody Forward newDir
 
 
 turningDirectionOf : Direction -> Direction -> TurningDirection
@@ -297,14 +301,7 @@ legalDirectionChanges snake =
 
 deriveDirectionLastTick : Snake -> Direction
 deriveDirectionLastTick snake =
-    case snake of
-        head :: neck :: _ ->
-            directionBetween neck head
-
-        _ ->
-            -- This catch-all should never be matched, as the snake should never
-            -- be less than 2 tiles long.
-            Right
+    directionBetween snake.neck snake.head
 
 
 directionBetween : Coord -> Coord -> Direction
@@ -399,21 +396,20 @@ tick activeGame =
 uncheckedTick : ActiveGame -> ( ActiveGame, Cmd Msg )
 uncheckedTick activeGame =
     let
-        -- The default should never be used, as the snake should never be 0 length.
         originalHead =
-            List.head activeGame.snake |> Maybe.withDefault ( 0, 0 )
+            List2.head activeGame.snake
 
         newHead =
             nextHead activeGame.direction originalHead
 
         newTail =
-            dropLast activeGame.snake
+            List2.dropLast activeGame.snake
     in
         if Just newHead == activeGame.food then
             let
                 intermediateGame =
                     { activeGame
-                        | snake = newHead :: activeGame.snake
+                        | snake = List2.cons newHead activeGame.snake
                         , food = Nothing
                     }
 
@@ -425,7 +421,7 @@ uncheckedTick activeGame =
                     (Random.int 0 (numEligibleFoodCoords - 1))
                 )
         else
-            ( { activeGame | snake = newHead :: newTail }, Cmd.none )
+            ( { activeGame | snake = List2.cons newHead newTail }, Cmd.none )
 
 
 doesSnakeCoverEntireGrid : ActiveGame -> Bool
@@ -434,7 +430,7 @@ doesSnakeCoverEntireGrid activeGame =
         ( width, height ) =
             activeGame.gridDims
     in
-        (List.length activeGame.snake) == width * height
+        (List2.length activeGame.snake) == width * height
 
 
 isGameOver : ActiveGame -> Bool
@@ -444,24 +440,16 @@ isGameOver activeGame =
 
 hasSnakeEatenSelf : Snake -> Bool
 hasSnakeEatenSelf snake =
-    case snake of
-        [] ->
-            -- Will never occur
-            False
-
-        head :: tail ->
-            List.member head tail
+    let
+        tail =
+            snake.neck :: snake.rest
+    in
+        List.member snake.head tail
 
 
 isSnakeOutsideGrid : ActiveGame -> Bool
 isSnakeOutsideGrid activeGame =
-    case activeGame.snake of
-        [] ->
-            -- Will never occur
-            False
-
-        head :: _ ->
-            not <| isCoordWithinGrid activeGame.gridDims head
+    not <| isCoordWithinGrid activeGame.gridDims activeGame.snake.head
 
 
 isCoordWithinGrid : GridDims -> Coord -> Bool
@@ -485,24 +473,10 @@ nextHead dir ( x, y ) =
             ( x + 1, y )
 
 
-dropLast : List a -> List a
-dropLast l =
-    case l of
-        [] ->
-            -- TODO: This should strictly lead to an error, but I don't know how.
-            []
-
-        [ x ] ->
-            []
-
-        x :: xs ->
-            x :: dropLast xs
-
-
 eligibleFoodCoords : ActiveGame -> List Coord
 eligibleFoodCoords activeGame =
     List.filter
-        (\c -> not <| List.member c activeGame.snake)
+        (\c -> not <| List2.member c activeGame.snake)
     <|
         enumerateAllGridCoords activeGame.gridDims
 
