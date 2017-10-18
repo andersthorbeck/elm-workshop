@@ -256,7 +256,7 @@ snakePartSvg { snakePart, direction } =
         template polygonPoints =
             let
                 degreesRotation =
-                    degreesRotationBetween direction Right
+                    degreesRotationBetween Right direction
             in
                 Svg.g [ SvgAttrs.transform <| "rotate(" ++ (toString degreesRotation) ++ ")" ]
                     [ Svg.polygon
@@ -471,12 +471,14 @@ counterClockwiseDirectionOf dir =
 
 degreesRotationBetween : Direction -> Direction -> Int
 degreesRotationBetween fromDir toDir =
+    -- The 90 degrees are opposite to what is expected because we flip the svg
+    -- vertically
     if toDir == clockwiseDirectionOf fromDir then
-        90
+        -90
     else if toDir == oppositeDirection fromDir then
         180
     else if toDir == counterClockwiseDirectionOf fromDir then
-        -90
+        90
     else
         0
 
