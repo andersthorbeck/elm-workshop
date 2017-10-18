@@ -9,6 +9,8 @@ import Time exposing (Time, millisecond)
 import Random
 import List.Extra exposing ((!!))
 import List.Min2Elems as List2
+import Svg
+import Svg.Attributes as SvgAttrs
 
 
 snakeApp =
@@ -216,9 +218,85 @@ viewRow row =
 
 viewTile : Tile -> Html a
 viewTile tile =
-    div
-        [ class <| "tile " ++ (tileClass tile) ]
-        []
+    let
+        content =
+            case tile of
+                SnakeTile snakePart ->
+                    [ Svg.svg
+                        [ SvgAttrs.viewBox "-50 -50 100 100" ]
+                        [ Svg.g [ SvgAttrs.transform "scale(1,-1)" ]
+                            [ snakePartSvg snakePart ]
+                        ]
+                    ]
+
+                _ ->
+                    []
+    in
+        div
+            [ class <| "tile " ++ (tileClass tile) ]
+            content
+
+
+snakePartSvg : SnakePartView -> Svg.Svg a
+snakePartSvg snakePart =
+    let
+        template : Direction -> String -> Svg.Svg a
+        template dir polygonPoints =
+            let
+                degreesRotation =
+                    degreesRotationBetween dir Right
+            in
+                Svg.g [ SvgAttrs.transform <| "rotate(" ++ (toString degreesRotation) ++ ")" ]
+                    [ Svg.polygon
+                        [ SvgAttrs.points polygonPoints
+                        , SvgAttrs.style "fill:lime;stroke:purple;stroke-width:1"
+                        ]
+                        []
+                    ]
+    in
+        case snakePart of
+            SnakeHead dir ->
+                template dir headSvgPoints
+
+            SnakeTail dir ->
+                template dir tailSvgPoints
+
+            SnakeBody turnDir dir ->
+                case turnDir of
+                    Forward ->
+                        template dir bodyForwardSvgPoints
+
+                    LeftTurn ->
+                        template dir bodyLeftTurnSvgPoints
+
+                    RightTurn ->
+                        template dir bodyRightTurnSvgPoints
+
+
+headSvgPoints : String
+headSvgPoints =
+    "-50,25 -35,25 -25,35 25,35 35,25 35,-25 25,-35 -25,-35 -35,-25 -50,-25"
+
+
+bodyForwardSvgPoints : String
+bodyForwardSvgPoints =
+    "-50,25 50,25 50,-25 -50,-25"
+
+
+bodyLeftTurnSvgPoints : String
+bodyLeftTurnSvgPoints =
+    --    "-50,25 -25,25 -25,50 25,50 25,-25 -50,-25"
+    "-25,50 -25,-25 50,-25 50,25 25,25 25,50"
+
+
+bodyRightTurnSvgPoints : String
+bodyRightTurnSvgPoints =
+    "-25,-50 -25,25 50,25 50,-25 25,-25 25,-50"
+
+
+tailSvgPoints : String
+tailSvgPoints =
+    "50,25 0,25 -25,0 0,-25 50,-25"
 
 
 tileClass : Tile -> String
@@ -377,6 +455,18 @@ counterClockwiseDirectionOf dir =
 
         Right ->
             Up
+
+
+degreesRotationBetween : Direction -> Direction -> Int
+degreesRotationBetween fromDir toDir =
+    if toDir == clockwiseDirectionOf fromDir then
+        90
+    else if toDir == oppositeDirection fromDir then
+        180
+    else if toDir == counterClockwiseDirectionOf fromDir then
+        -90
+    else
+        0
 
 
 tick : ActiveGame -> ( Model, Cmd Msg )
