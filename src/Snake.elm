@@ -252,37 +252,40 @@ viewTile tile =
 snakePartSvg : DirectedSnakePartView -> Svg.Svg a
 snakePartSvg { snakePart, direction } =
     let
-        template : String -> Svg.Svg a
-        template polygonPoints =
-            let
-                degreesRotation =
-                    degreesRotationBetween Right direction
-            in
-                Svg.g [ SvgAttrs.transform <| "rotate(" ++ (toString degreesRotation) ++ ")" ]
-                    [ Svg.polygon
-                        [ SvgAttrs.points polygonPoints
-                        , SvgAttrs.style "fill:lime;stroke:purple;stroke-width:1"
-                        ]
-                        []
-                    ]
+        degreesRotation =
+            degreesRotationBetween Right direction
+
+        polygonPoints =
+            case snakePart of
+                SnakeHead ->
+                    headSvgPoints
+
+                SnakeTail ->
+                    tailSvgPoints
+
+                SnakeBody turnDir ->
+                    case turnDir of
+                        Forward ->
+                            bodyForwardSvgPoints
+
+                        LeftTurn ->
+                            bodyLeftTurnSvgPoints
+
+                        RightTurn ->
+                            bodyRightTurnSvgPoints
     in
-        case snakePart of
-            SnakeHead ->
-                template headSvgPoints
-
-            SnakeTail ->
-                template tailSvgPoints
-
-            SnakeBody turnDir ->
-                case turnDir of
-                    Forward ->
-                        template bodyForwardSvgPoints
-
-                    LeftTurn ->
-                        template bodyLeftTurnSvgPoints
-
-                    RightTurn ->
-                        template bodyRightTurnSvgPoints
+        Svg.g
+            [ SvgAttrs.transform <|
+                "rotate("
+                    ++ (toString degreesRotation)
+                    ++ ")"
+            ]
+            [ Svg.polygon
+                [ SvgAttrs.points polygonPoints
+                , SvgAttrs.style "fill:lime;stroke:purple;stroke-width:1"
+                ]
+                []
+            ]
 
 
 headSvgPoints : String
