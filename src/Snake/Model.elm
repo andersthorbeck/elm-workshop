@@ -99,14 +99,20 @@ type alias Row =
 
 type Tile
     = FreeTile
-    | SnakeTile SnakePartView
+    | SnakeTile DirectedSnakePartView
     | FoodTile
 
 
+type alias DirectedSnakePartView =
+    { snakePart : SnakePartView
+    , direction : Direction
+    }
+
+
 type SnakePartView
-    = SnakeHead Direction
-    | SnakeBody TurningDirection Direction
-    | SnakeTail Direction
+    = SnakeHead
+    | SnakeBody TurningDirection
+    | SnakeTail
 
 
 type TurningDirection

@@ -108,9 +108,15 @@ toRow activeGame rowNum =
 toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
     if List2.head activeGame.snake == coord then
-        SnakeTile <| SnakeHead activeGame.direction
+        SnakeTile <|
+            { snakePart = SnakeHead
+            , direction = activeGame.direction
+            }
     else if List2.last activeGame.snake == coord then
-        SnakeTile <| SnakeTail <| deriveTailDirection activeGame.snake
+        SnakeTile <|
+            { snakePart = SnakeTail
+            , direction = deriveTailDirection activeGame.snake
+            }
     else if List2.member coord activeGame.snake then
         SnakeTile <| deriveSnakeBody coord activeGame
     else if Just coord == activeGame.food then
@@ -134,7 +140,7 @@ deriveTailDirection snake =
         direction
 
 
-deriveSnakeBody : Coord -> ActiveGame -> SnakePartView
+deriveSnakeBody : Coord -> ActiveGame -> DirectedSnakePartView
 deriveSnakeBody coord activeGame =
     -- Prerequisite: Assumes we already know the coord is part of the snake,
     -- and that we know the snake is at least length 3.
@@ -151,7 +157,9 @@ deriveSnakeBody coord activeGame =
             -- TODO: Redesign data types to avoid so many "should never
             -- happen"s.
             Nothing ->
-                SnakeBody Forward activeGame.direction
+                { snakePart = SnakeBody Forward
+                , direction = activeGame.direction
+                }
 
             Just index ->
                 let
@@ -181,12 +189,16 @@ deriveSnakeBody coord activeGame =
                                 turnDir =
                                     turningDirectionOf prevDir newDir
                             in
-                                SnakeBody turnDir newDir
+                                { snakePart = SnakeBody turnDir
+                                , direction = newDir
+                                }
 
                         Nothing ->
                             -- Should never happen, we know the snake is at
                             -- least 3 coords long at this point
-                            SnakeBody Forward newDir
+                            { snakePart = SnakeBody Forward
+                            , direction = newDir
+                            }
 
 
 turningDirectionOf : Direction -> Direction -> TurningDirection
@@ -237,14 +249,14 @@ viewTile tile =
             content
 
 
-snakePartSvg : SnakePartView -> Svg.Svg a
-snakePartSvg snakePart =
+snakePartSvg : DirectedSnakePartView -> Svg.Svg a
+snakePartSvg { snakePart, direction } =
     let
-        template : Direction -> String -> Svg.Svg a
-        template dir polygonPoints =
+        template : String -> Svg.Svg a
+        template polygonPoints =
             let
                 degreesRotation =
-                    degreesRotationBetween dir Right
+                    degreesRotationBetween direction Right
             in
                 Svg.g [ SvgAttrs.transform <| "rotate(" ++ (toString degreesRotation) ++ ")" ]
                     [ Svg.polygon
@@ -255,22 +267,22 @@ snakePartSvg snakePart =
                     ]
     in
         case snakePart of
-            SnakeHead dir ->
-                template dir headSvgPoints
+            SnakeHead ->
+                template headSvgPoints
 
-            SnakeTail dir ->
-                template dir tailSvgPoints
+            SnakeTail ->
+                template tailSvgPoints
 
-            SnakeBody turnDir dir ->
+            SnakeBody turnDir ->
                 case turnDir of
                     Forward ->
-                        template dir bodyForwardSvgPoints
+                        template bodyForwardSvgPoints
 
                     LeftTurn ->
-                        template dir bodyLeftTurnSvgPoints
+                        template bodyLeftTurnSvgPoints
 
                     RightTurn ->
-                        template dir bodyRightTurnSvgPoints
+                        template bodyRightTurnSvgPoints
 
 
 headSvgPoints : String
@@ -302,15 +314,15 @@ tailSvgPoints =
 tileClass : Tile -> String
 tileClass tile =
     case tile of
-        SnakeTile snakePart ->
+        SnakeTile { snakePart, direction } ->
             case snakePart of
-                SnakeHead dir ->
+                SnakeHead ->
                     "snake head"
 
-                SnakeBody turnDir dir ->
+                SnakeBody turnDir ->
                     "snake"
 
-                SnakeTail dir ->
+                SnakeTail ->
                     "snake tail"
 
         FoodTile ->
