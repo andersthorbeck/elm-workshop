@@ -279,33 +279,35 @@ viewTile tile =
 snakePartSvg : DirectedSnakePartView -> List (Svg.Svg a)
 snakePartSvg { snakePart, direction } =
     let
-        polygonPoints =
-            case snakePart of
-                SnakeHead ->
-                    headSvgPoints
+        snakeStyle =
+            "fill:lime;stroke:purple;stroke-width:1"
 
-                SnakeTail ->
-                    tailSvgPoints
-
-                SnakeBody turnDir ->
-                    case turnDir of
-                        Forward ->
-                            bodyForwardSvgPoints
-
-                        LeftTurn ->
-                            bodyLeftTurnSvgPoints
-
-                        RightTurn ->
-                            bodyRightTurnSvgPoints
-    in
-        [ rotateSvgsFacing direction
-            [ Svg.polygon
-                [ SvgAttrs.points polygonPoints
-                , SvgAttrs.style "fill:lime;stroke:purple;stroke-width:1"
+        template polygonPoints =
+            rotateSvgsFacing direction
+                [ Svg.polygon
+                    [ SvgAttrs.points polygonPoints
+                    , SvgAttrs.style snakeStyle
+                    ]
+                    []
                 ]
-                []
-            ]
-        ]
+    in
+        case snakePart of
+            SnakeHead ->
+                [ template headSvgPoints ]
+
+            SnakeTail ->
+                [ template tailSvgPoints ]
+
+            SnakeBody turnDir ->
+                case turnDir of
+                    Forward ->
+                        [ template bodyForwardSvgPoints ]
+
+                    LeftTurn ->
+                        [ template bodyLeftTurnSvgPoints ]
+
+                    RightTurn ->
+                        [ template bodyRightTurnSvgPoints ]
 
 
 rotateSvgsFacing : Direction -> List (Svg.Svg a) -> Svg.Svg a
