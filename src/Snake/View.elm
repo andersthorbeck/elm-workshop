@@ -252,7 +252,7 @@ viewTile tile =
                     [ Svg.svg
                         [ SvgAttrs.viewBox "-50 -50 100 100" ]
                         [ Svg.g [ SvgAttrs.transform "scale(1,-1)" ]
-                            [ snakePartSvg snakePart ]
+                            (snakePartSvg snakePart)
                         ]
                     ]
 
@@ -276,7 +276,7 @@ viewTile tile =
             content
 
 
-snakePartSvg : DirectedSnakePartView -> Svg.Svg a
+snakePartSvg : DirectedSnakePartView -> List (Svg.Svg a)
 snakePartSvg { snakePart, direction } =
     let
         degreesRotation =
@@ -301,7 +301,7 @@ snakePartSvg { snakePart, direction } =
                         RightTurn ->
                             bodyRightTurnSvgPoints
     in
-        Svg.g
+        [ Svg.g
             [ SvgAttrs.transform <|
                 "rotate("
                     ++ (toString degreesRotation)
@@ -313,6 +313,7 @@ snakePartSvg { snakePart, direction } =
                 ]
                 []
             ]
+        ]
 
 
 degreesRotationBetween : Direction -> Direction -> Int
