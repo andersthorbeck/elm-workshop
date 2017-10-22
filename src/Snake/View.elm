@@ -279,9 +279,6 @@ viewTile tile =
 snakePartSvg : DirectedSnakePartView -> List (Svg.Svg a)
 snakePartSvg { snakePart, direction } =
     let
-        degreesRotation =
-            degreesRotationBetween Right direction
-
         polygonPoints =
             case snakePart of
                 SnakeHead ->
@@ -301,12 +298,7 @@ snakePartSvg { snakePart, direction } =
                         RightTurn ->
                             bodyRightTurnSvgPoints
     in
-        [ Svg.g
-            [ SvgAttrs.transform <|
-                "rotate("
-                    ++ (toString degreesRotation)
-                    ++ ")"
-            ]
+        [ rotateSvgsFacing direction
             [ Svg.polygon
                 [ SvgAttrs.points polygonPoints
                 , SvgAttrs.style "fill:lime;stroke:purple;stroke-width:1"
@@ -314,6 +306,21 @@ snakePartSvg { snakePart, direction } =
                 []
             ]
         ]
+
+
+rotateSvgsFacing : Direction -> List (Svg.Svg a) -> Svg.Svg a
+rotateSvgsFacing direction svgs =
+    let
+        degreesRotation =
+            degreesRotationBetween Right direction
+    in
+        Svg.g
+            [ SvgAttrs.transform <|
+                "rotate("
+                    ++ (toString degreesRotation)
+                    ++ ")"
+            ]
+            svgs
 
 
 degreesRotationBetween : Direction -> Direction -> Int
