@@ -255,19 +255,21 @@ viewRow row =
 viewTile : Tile -> Html a
 viewTile tile =
     let
+        viewBox children =
+            [ Svg.svg
+                [ SvgAttrs.viewBox "-50 -50 100 100" ]
+                [ Svg.g [ SvgAttrs.transform "scale(1,-1)" ]
+                    children
+                ]
+            ]
+
         content =
             case tile of
                 SnakeTile snakePart ->
-                    [ Svg.svg
-                        [ SvgAttrs.viewBox "-50 -50 100 100" ]
-                        [ Svg.g [ SvgAttrs.transform "scale(1,-1)" ]
-                            (snakePartSvg snakePart)
-                        ]
-                    ]
+                    viewBox (snakePartSvg snakePart)
 
                 FoodTile ->
-                    [ Svg.svg
-                        [ SvgAttrs.viewBox "-50 -50 100 100" ]
+                    viewBox
                         [ Svg.circle
                             [ SvgAttrs.r "25"
                             , SvgAttrs.style
@@ -275,7 +277,6 @@ viewTile tile =
                             ]
                             []
                         ]
-                    ]
 
                 _ ->
                     []
