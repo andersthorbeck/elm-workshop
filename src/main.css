@@ -67,6 +67,7 @@ ul {
   height: 32px;
   display: inline-block;
   vertical-align: top;
+  background-color: gray
 }
 
 .tile > svg {
@@ -81,6 +82,7 @@ ul {
   background-color: #ccc;
 }
 
+/*
 .snake {
   background-color: yellow;
 }
@@ -96,3 +98,4 @@ ul {
 .unoccupied {
   background-color: gray
 }
+*/
