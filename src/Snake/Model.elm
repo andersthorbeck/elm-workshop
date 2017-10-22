@@ -1,7 +1,7 @@
 module Snake.Model exposing (..)
 
 import Keyboard
-import List.Min2Elems exposing (..)
+import List.Min2Elems as List2 exposing (ListMin2Elems)
 
 
 type alias Test =
@@ -77,6 +77,20 @@ type Msg
     | NoOp
     | NewFood Int
     | RestartGame
+
+
+
+-- Initial model
+
+
+initialModel : Model
+initialModel =
+    Playing
+        { gridDims = ( 6, 5 )
+        , snake = List2.withAtLeastTwoElements ( 2, 2 ) ( 3, 2 ) [ ( 4, 2 ) ]
+        , direction = Left
+        , food = Just ( 1, 3 )
+        }
 
 
 
