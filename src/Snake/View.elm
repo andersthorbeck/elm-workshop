@@ -9,6 +9,45 @@ import Svg
 import Svg.Attributes as SvgAttrs
 
 
+-- View types
+
+
+type alias Grid =
+    List Row
+
+
+type alias Row =
+    List Tile
+
+
+type Tile
+    = FreeTile
+    | SnakeTile DirectedSnakePartView
+    | FoodTile
+
+
+type alias DirectedSnakePartView =
+    { snakePart : SnakePartView
+    , direction : Direction
+    }
+
+
+type SnakePartView
+    = SnakeHead
+    | SnakeBody TurningDirection
+    | SnakeTail
+
+
+type TurningDirection
+    = Forward
+    | LeftTurn
+    | RightTurn
+
+
+
+-- View Functions
+
+
 view : Model -> Html Msg
 view model =
     let
