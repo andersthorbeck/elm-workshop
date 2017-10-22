@@ -33,7 +33,7 @@ type alias DirectedSnakePartView =
 
 
 type SnakePartView
-    = SnakeHead
+    = SnakeHead LookingDirection
     | SnakeBody TurningDirection
     | SnakeTail
 
@@ -42,6 +42,10 @@ type TurningDirection
     = Forward
     | LeftTurn
     | RightTurn
+
+
+type alias LookingDirection =
+    Direction
 
 
 
@@ -125,8 +129,8 @@ toTile : ActiveGame -> Coord -> Tile
 toTile activeGame coord =
     if List2.head activeGame.snake == coord then
         SnakeTile <|
-            { snakePart = SnakeHead
-            , direction = activeGame.direction
+            { snakePart = SnakeHead <| activeGame.direction
+            , direction = deriveHeadDirection activeGame.snake
             }
     else if List2.last activeGame.snake == coord then
         SnakeTile <|
@@ -139,6 +143,11 @@ toTile activeGame coord =
         FoodTile
     else
         FreeTile
+
+
+deriveHeadDirection : Snake -> Direction
+deriveHeadDirection snake =
+    directionBetween snake.neck snake.head
 
 
 deriveTailDirection : Snake -> Direction
@@ -292,8 +301,23 @@ snakePartSvg { snakePart, direction } =
                 ]
     in
         case snakePart of
-            SnakeHead ->
-                [ template headSvgPoints ]
+            SnakeHead nextDir ->
+                let
+                    eye y =
+                        Svg.circle
+                            [ SvgAttrs.style "fill:blue"
+                            , SvgAttrs.r "5"
+                            , SvgAttrs.cx "25"
+                            , SvgAttrs.cy y
+                            ]
+                            []
+                in
+                    [ template headSvgPoints
+                    , rotateSvgsFacing nextDir
+                        [ eye "-10"
+                        , eye "10"
+                        ]
+                    ]
 
             SnakeTail ->
                 [ template tailSvgPoints ]
@@ -370,7 +394,7 @@ tileClass tile =
     case tile of
         SnakeTile { snakePart, direction } ->
             case snakePart of
-                SnakeHead ->
+                SnakeHead _ ->
                     "snake head"
 
                 SnakeBody turnDir ->
