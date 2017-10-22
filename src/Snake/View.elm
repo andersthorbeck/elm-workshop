@@ -231,7 +231,6 @@ turningDirectionOf prevDir newDir =
 
 viewGrid : Grid -> Html a
 viewGrid grid =
-    -- TODO: More detailed snake-view
     div
         [ class "grid" ]
         (List.map viewRow grid)
