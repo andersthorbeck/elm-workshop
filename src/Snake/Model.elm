@@ -119,3 +119,82 @@ type TurningDirection
     = Forward
     | LeftTurn
     | RightTurn
+
+
+
+-- Model functions
+
+
+directionBetween : Coord -> Coord -> Direction
+directionBetween from to =
+    let
+        ( xDiff, yDiff ) =
+            subtract to from
+    in
+        if (abs xDiff) >= (abs yDiff) then
+            if xDiff >= 0 then
+                Right
+            else
+                Left
+        else if yDiff >= 0 then
+            Up
+        else
+            Down
+
+
+subtract : Coord -> Coord -> Coord
+subtract ( x1, y1 ) ( x2, y2 ) =
+    ( x1 - x2, y1 - y2 )
+
+
+allDirections : List Direction
+allDirections =
+    [ Up, Down, Left, Right ]
+
+
+oppositeDirection : Direction -> Direction
+oppositeDirection dir =
+    case dir of
+        Up ->
+            Down
+
+        Down ->
+            Up
+
+        Left ->
+            Right
+
+        Right ->
+            Left
+
+
+clockwiseDirectionOf : Direction -> Direction
+clockwiseDirectionOf dir =
+    case dir of
+        Up ->
+            Right
+
+        Right ->
+            Down
+
+        Down ->
+            Left
+
+        Left ->
+            Up
+
+
+counterClockwiseDirectionOf : Direction -> Direction
+counterClockwiseDirectionOf dir =
+    case dir of
+        Up ->
+            Left
+
+        Left ->
+            Down
+
+        Down ->
+            Right
+
+        Right ->
+            Up
