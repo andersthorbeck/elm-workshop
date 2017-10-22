@@ -182,12 +182,10 @@ enumerateAllGridCoords ( width, height ) =
         cartesian xs ys
 
 
-
--- Copied from https://gist.github.com/fredcy/5746b0af5ddb3f23f27470f41c883f86
-
-
 cartesian : List a -> List b -> List ( a, b )
 cartesian xs ys =
+    -- Copied from:
+    -- https://gist.github.com/fredcy/5746b0af5ddb3f23f27470f41c883f86
     List.concatMap
         (\x -> List.map (\y -> ( x, y )) ys)
         xs
