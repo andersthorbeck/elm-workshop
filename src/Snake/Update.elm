@@ -56,8 +56,8 @@ legalDirectionChanges : Snake -> List Direction
 legalDirectionChanges snake =
     let
         -- We derive direction from last tick instead of using current direction
-        -- directly from activeGame, to avoid issues where you might change direction
-        -- several times between consecutive ticks.
+        -- directly from activeGame, to avoid issues where you might change
+        -- direction several times between consecutive ticks.
         currDir =
             deriveDirectionLastTick snake
     in

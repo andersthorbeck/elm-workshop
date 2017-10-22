@@ -339,6 +339,7 @@ rotateSvgsFacing : Direction -> List (Svg.Svg a) -> Svg.Svg a
 rotateSvgsFacing direction svgs =
     let
         degreesRotation =
+            -- All snake body-part SVGs have been designed facing right.
             degreesRotationBetween Right direction
     in
         Svg.g
@@ -376,7 +377,6 @@ bodyForwardSvgPoints =
 
 bodyLeftTurnSvgPoints : String
 bodyLeftTurnSvgPoints =
-    --    "-50,25 -25,25 -25,50 25,50 25,-25 -50,-25"
     "-25,50 -25,-25 50,-25 50,25 25,25 25,50"
 
 
