@@ -29,13 +29,9 @@ update msg model =
                 NewFood index ->
                     let
                         newFood =
-                            -- The default should never be used, as the index
-                            -- should always be generated in range
-                            (eligibleFoodCoords activeGame)
-                                !! index
-                                |> Maybe.withDefault ( 0, 0 )
+                            (eligibleFoodCoords activeGame) !! index
                     in
-                        ( Playing { activeGame | food = Just newFood }
+                        ( Playing { activeGame | food = newFood }
                         , Cmd.none
                         )
 
