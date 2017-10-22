@@ -259,9 +259,10 @@ viewTile tile =
                 FoodTile ->
                     [ Svg.svg
                         [ SvgAttrs.viewBox "-50 -50 100 100" ]
-                        [ Svg.polygon
-                            [ SvgAttrs.points "-25,-25 -25,25 25,25 25,-25"
-                            , SvgAttrs.style "fill:red;stroke:purple;stroke-width:1"
+                        [ Svg.circle
+                            [ SvgAttrs.r "25"
+                            , SvgAttrs.style
+                                "fill:red;stroke:purple;stroke-width:1"
                             ]
                             []
                         ]
