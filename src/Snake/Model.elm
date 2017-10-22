@@ -34,11 +34,8 @@ type Health
     | Dead
 
 
-
--- From origin (inclusive) to this coord (exclusive)
-
-
 type alias GridDims =
+    -- From origin (inclusive) to this coord (exclusive)
     Coord
 
 
@@ -54,11 +51,8 @@ type alias Vertical =
     Int
 
 
-
--- Head of Snake is first Coord of List
-
-
 type alias Snake =
+    -- Head of Snake is first Coord of List
     ListMin2Elems Coord
 
 
