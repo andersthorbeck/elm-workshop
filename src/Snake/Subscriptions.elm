@@ -11,11 +11,15 @@ subscriptions model =
         GameOver _ ->
             Sub.none
 
-        Playing _ ->
-            Sub.batch
-                [ Keyboard.downs keyCodeToMsg
-                , Time.every (500 * millisecond) (\_ -> Tick)
-                ]
+        Playing activeGame ->
+            if activeGame.paused then
+                Sub.batch
+                    [ Keyboard.downs keyCodeToMsg ]
+            else
+                Sub.batch
+                    [ Keyboard.downs keyCodeToMsg
+                    , Time.every (500 * millisecond) (\_ -> Tick)
+                    ]
 
 
 keyCodeToMsg : Keyboard.KeyCode -> Msg
@@ -25,7 +29,10 @@ keyCodeToMsg keyCode =
             ChangeDirection direction
 
         Nothing ->
-            NoOp
+            if keyCode == spaceKey then
+                TogglePause
+            else
+                NoOp
 
 
 keyCodeToDirection : Keyboard.KeyCode -> Maybe Direction
@@ -45,3 +52,8 @@ keyCodeToDirection keyCode =
 
         _ ->
             Nothing
+
+
+spaceKey : Keyboard.KeyCode
+spaceKey =
+    32

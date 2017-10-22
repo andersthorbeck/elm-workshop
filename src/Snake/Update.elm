@@ -39,6 +39,11 @@ update msg model =
                         , Cmd.none
                         )
 
+                TogglePause ->
+                    ( Playing { activeGame | paused = not activeGame.paused }
+                    , Cmd.none
+                    )
+
                 _ ->
                     ( Playing activeGame, Cmd.none )
 

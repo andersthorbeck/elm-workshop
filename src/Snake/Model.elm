@@ -26,6 +26,7 @@ type alias ActiveGame =
     , snake : Snake
     , direction : Direction
     , food : Maybe Food
+    , paused : Bool
     }
 
 
@@ -77,6 +78,7 @@ type Msg
     | NoOp
     | NewFood Int
     | RestartGame
+    | TogglePause
 
 
 
@@ -90,6 +92,7 @@ initialModel =
         , snake = List2.withAtLeastTwoElements ( 2, 2 ) ( 3, 2 ) [ ( 4, 2 ) ]
         , direction = Left
         , food = Just ( 1, 3 )
+        , paused = False
         }
 
 
